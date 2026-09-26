@@ -419,6 +419,15 @@ function App(){
     else root.setAttribute('data-theme',theme);
     try{ localStorage.setItem('atelier-theme',theme); }catch(e){}
   },[theme]);
+  // migração: se o usuário já tinha escolhido uma ODS em Cores/Tipografia/Ícones antes dessa
+  // ODS virar um valor único do projeto, aproveita a primeira que encontrar.
+  useEffect(()=>{
+    setData(prev=>{
+      if(prev.projetoOds) return prev;
+      const legacy = (prev.cores&&prev.cores.ods) || (prev.tipografia&&prev.tipografia.ods) || (prev.icones&&prev.icones.ods);
+      return legacy ? {...prev, projetoOds:legacy} : prev;
+    });
+  }, []);
 
   const goHome = ()=>setCurrent(null);
   const ActiveComponent = current ? COMPONENT_MAP[current] : null;

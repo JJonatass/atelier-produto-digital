@@ -325,6 +325,15 @@ function useSlice(data,setData,id,defaults){
   return [slice, patch];
 }
 
+/* ---------- ODS do projeto: valor único, compartilhado entre Paleta/Tipografia/Ícones ---------- */
+function useProjectOds(data,setData){
+  const ods = data.projetoOds || '';
+  function setOds(v){
+    setData(prev=> prev.projetoOds===v ? prev : {...prev, projetoOds:v});
+  }
+  return [ods, setOds];
+}
+
 function SummaryShell({title,n,icon,id,summaryText,onEdit,onHome,children}){
   const [promptOpen,setPromptOpen] = useState(false);
   const prompt = useMemo(()=>buildInfographicPrompt({id,title,n,summaryText}), [id,title,n,summaryText]);

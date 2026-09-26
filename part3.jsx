@@ -160,6 +160,7 @@ function ArtCores({data,setData,goHome}){
     step:0, done:false
   };
   const [s,patch] = useSlice(data,setData,'cores',defaults);
+  const [ods,setOds] = useProjectOds(data,setData);
   const [showSummary,setShowSummary] = useState(!!s.done);
   const meta = ARTIFACTS.find(a=>a.id==='cores');
 
@@ -174,7 +175,7 @@ function ArtCores({data,setData,goHome}){
   const steps = [
     {label:'ODS e cor primária',
      book:<p>As cores não são neutras: cada tom envia uma mensagem. Escolha uma ODS e defina a cor primária — a principal cor de identidade, usada em botões e cabeçalhos — justificando pela psicologia das cores.</p>,
-     render:()=>(<div><SelectField label="ODS escolhida" value={s.ods} onChange={v=>patch({ods:v})} options={ODS_LIST} /><ColorField label="Cor primária" value={s.primaria} onChange={v=>patch({primaria:v})} /><Field type="textarea" label="Justificativa (psicologia das cores)" value={s.justificativaPrimaria} onChange={v=>patch({justificativaPrimaria:v})} rows={2} /></div>)
+     render:()=>(<div><SelectField label="ODS escolhida" value={ods} onChange={setOds} options={ODS_LIST} hint="Escolhida uma vez aqui, ela já vem preenchida em Tipografia e Ícones — é a mesma ODS do projeto em todo o Design System." /><ColorField label="Cor primária" value={s.primaria} onChange={v=>patch({primaria:v})} /><Field type="textarea" label="Justificativa (psicologia das cores)" value={s.justificativaPrimaria} onChange={v=>patch({justificativaPrimaria:v})} rows={2} /></div>)
     },
     {label:'Secundária e neutras',
      book:<p>A cor secundária apoia a primária em destaques menores. As neutras (tons de cinza, preto e branco) são usadas em fundos, bordas e textos.</p>,
@@ -265,7 +266,7 @@ function ArtCores({data,setData,goHome}){
   ];
 
   if(showSummary){
-    const txt = `PALETA DE CORES — ${s.ods||'(ODS não definida)'}\nPrimária: ${s.primaria} — ${s.justificativaPrimaria||''}\nSecundária: ${s.secundaria} — ${s.justificativaSecundaria||''}\nNeutras: ${s.neutras.join(', ')}\nEstados — success:${s.estados.success} error:${s.estados.error} warning:${s.estados.warning} info:${s.estados.info}\nEsquema escolhido: ${ESQUEMA_LABELS[s.esquemaEscolhido]||s.esquemaEscolhido}\nContraste texto/fundo: ${ratio.toFixed(2)}:1`;
+    const txt = `PALETA DE CORES — ${ods||'(ODS não definida)'}\nPrimária: ${s.primaria} — ${s.justificativaPrimaria||''}\nSecundária: ${s.secundaria} — ${s.justificativaSecundaria||''}\nNeutras: ${s.neutras.join(', ')}\nEstados — success:${s.estados.success} error:${s.estados.error} warning:${s.estados.warning} info:${s.estados.info}\nEsquema escolhido: ${ESQUEMA_LABELS[s.esquemaEscolhido]||s.esquemaEscolhido}\nContraste texto/fundo: ${ratio.toFixed(2)}:1`;
     return (
       <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <div className="swatch-row" style={{flexWrap:'wrap',marginBottom:'14px'}}>
@@ -277,7 +278,7 @@ function ArtCores({data,setData,goHome}){
           <div className="swatch" style={{background:s.estados.warning}}></div>
           <div className="swatch" style={{background:s.estados.info}}></div>
         </div>
-        <p style={{color:'var(--ink)'}}><strong>{s.ods}</strong></p>
+        <p style={{color:'var(--ink)'}}><strong>{ods}</strong></p>
         <p style={{color:'var(--ink)'}}>Contraste texto/fundo escolhido: <ContrastBadge ratio={ratio} /></p>
         <CopyButton text={txt} />
       </SummaryShell>
@@ -362,12 +363,13 @@ function FontSelect({label,value,onChange,options}){
 function ArtTipografia({data,setData,goHome}){
   const defaults = {ods:'',publico:'',adjetivos:['','',''],tipoFonte:'',justificativaTipo:'',fonteTitulos:'Fraunces',fonteCorpo:'Public Sans',escala:{h1:26,h2:20,h3:17,body:16,caption:12,button:15},step:0,done:false};
   const [s,patch] = useSlice(data,setData,'tipografia',defaults);
+  const [ods,setOds] = useProjectOds(data,setData);
   const [showSummary,setShowSummary] = useState(!!s.done);
   const meta = ARTIFACTS.find(a=>a.id==='tipografia');
   const steps = [
     {label:'Voz tipográfica',
      book:<p>Escolha uma ODS, o público principal e três adjetivos para o tom do app (ex.: próximo, sério, inovador, acolhedor).</p>,
-     render:()=>(<div><SelectField label="ODS" value={s.ods} onChange={v=>patch({ods:v})} options={ODS_LIST} /><Field label="Público principal" value={s.publico} onChange={v=>patch({publico:v})} placeholder="Ex.: idosos, agricultores, gestores públicos" /><div className="grid-3">{s.adjetivos.map((a,i)=><Field key={i} label={'Adjetivo '+(i+1)} value={a} onChange={v=>{const next=[...s.adjetivos];next[i]=v;patch({adjetivos:next});}} />)}</div></div>)
+     render:()=>(<div><SelectField label="ODS" value={ods} onChange={setOds} options={ODS_LIST} hint="Já veio preenchida se você escolheu em outra etapa do Design System — é a mesma ODS do projeto." /><Field label="Público principal" value={s.publico} onChange={v=>patch({publico:v})} placeholder="Ex.: idosos, agricultores, gestores públicos" /><div className="grid-3">{s.adjetivos.map((a,i)=><Field key={i} label={'Adjetivo '+(i+1)} value={a} onChange={v=>{const next=[...s.adjetivos];next[i]=v;patch({adjetivos:next});}} />)}</div></div>)
     },
     {label:'Tipo de fonte',
      book:<p>Serifadas passam tradição e formalidade; Sem serifa (o padrão para UI) passam modernidade; Manuscritas passam proximidade e afeto; Display chama atenção em títulos curtos.</p>,
@@ -412,7 +414,7 @@ function ArtTipografia({data,setData,goHome}){
     },
   ];
   if(showSummary){
-    const txt = `TIPOGRAFIA — ${s.ods||''}\nPúblico: ${s.publico||'—'}\nTom: ${s.adjetivos.filter(Boolean).join(', ')}\nTipo de fonte: ${s.tipoFonte||'—'} — ${s.justificativaTipo||''}\nTítulos: ${s.fonteTitulos} | Corpo: ${s.fonteCorpo}\nEscala — H1:${s.escala.h1}px H2:${s.escala.h2}px H3:${s.escala.h3}px Body:${s.escala.body}px Caption:${s.escala.caption}px Button:${s.escala.button}px`;
+    const txt = `TIPOGRAFIA — ${ods||''}\nPúblico: ${s.publico||'—'}\nTom: ${s.adjetivos.filter(Boolean).join(', ')}\nTipo de fonte: ${s.tipoFonte||'—'} — ${s.justificativaTipo||''}\nTítulos: ${s.fonteTitulos} | Corpo: ${s.fonteCorpo}\nEscala — H1:${s.escala.h1}px H2:${s.escala.h2}px H3:${s.escala.h3}px Body:${s.escala.body}px Caption:${s.escala.caption}px Button:${s.escala.button}px`;
     return (
       <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <GoogleFontLoader family={s.fonteTitulos} /><GoogleFontLoader family={s.fonteCorpo} />
@@ -433,6 +435,7 @@ function ArtTipografia({data,setData,goHome}){
 function ArtIcones({data,setData,goHome}){
   const defaults = {ods:'',fraseApp:'',acoes:[{id:uid(),acao:'',icone:'',justificativa:''},{id:uid(),acao:'',icone:'',justificativa:''},{id:uid(),acao:'',icone:'',justificativa:''}],reflexao:{facil:'',ambiguo:'',ajudou:''},step:0,done:false};
   const [s,patch] = useSlice(data,setData,'icones',defaults);
+  const [ods,setOds] = useProjectOds(data,setData);
   const [showSummary,setShowSummary] = useState(!!s.done);
   const meta = ARTIFACTS.find(a=>a.id==='icones');
   function setAcao(i,field,val){ const next=[...s.acoes]; next[i]={...next[i],[field]:val}; patch({acoes:next}); }
@@ -441,7 +444,7 @@ function ArtIcones({data,setData,goHome}){
   const steps = [
     {label:'Contexto',
      book:<p>Ícones são atalhos cognitivos: ajudam o usuário a entender rapidamente o que pode fazer. Escolha uma ODS e descreva seu app em uma frase.</p>,
-     render:()=>(<div><SelectField label="ODS" value={s.ods} onChange={v=>patch({ods:v})} options={ODS_LIST} /><Field label="Descreva seu app em 1 frase" value={s.fraseApp} onChange={v=>patch({fraseApp:v})} placeholder="Ex.: App para alunos acompanharem aulas e tarefas" /></div>)
+     render:()=>(<div><SelectField label="ODS" value={ods} onChange={setOds} options={ODS_LIST} hint="Já veio preenchida se você escolheu em outra etapa do Design System — é a mesma ODS do projeto." /><Field label="Descreva seu app em 1 frase" value={s.fraseApp} onChange={v=>patch({fraseApp:v})} placeholder="Ex.: App para alunos acompanharem aulas e tarefas" /></div>)
     },
     {label:'Ações e ícones',
      book:<><p>Liste as ações principais do app e, para cada uma, escolha (ou descreva) um ícone e justifique a metáfora visual — lembrando: sempre que possível, ícone + texto.</p></>,
@@ -480,7 +483,7 @@ function ArtIcones({data,setData,goHome}){
     },
   ];
   if(showSummary){
-    const txt = `ÍCONES E ICONOGRAFIA — ${s.ods}\n${s.fraseApp}\n\n`+s.acoes.filter(a=>a.acao).map(a=>a.icone+' '+a.acao+' — '+a.justificativa).join('\n');
+    const txt = `ÍCONES E ICONOGRAFIA — ${ods}\n${s.fraseApp}\n\n`+s.acoes.filter(a=>a.acao).map(a=>a.icone+' '+a.acao+' — '+a.justificativa).join('\n');
     return (
       <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <p style={{color:'var(--ink)'}}>{s.fraseApp}</p>
