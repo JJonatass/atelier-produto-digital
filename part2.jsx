@@ -354,9 +354,27 @@ function ArtLeanCanvas({data,setData,goHome}){
      )
     },
     {label:'4. Canais',
-     book:<><p>Canal bom = encontro + adesão + retorno. Avalie cada canal por Custo, Alcance, Segmentação, Controle, Mensurável e Inclusivo (0–10) — a nota final ajuda a escolher os 2-3 do "anel interno" (Bullseye).</p></>,
+     book:<><p>Canal bom = encontro + adesão + retorno. Se só gera clique bonito, não é canal, é vaidade. Avalie cada canal e use a nota para escolher os do "anel interno" (processo Bullseye).</p></>,
      render:()=>(
       <div>
+        <div className="summary-block" style={{marginBottom:'16px'}}>
+          <h4>Como escolher canais (processo Bullseye)</h4>
+          <p className="mini-note" style={{marginBottom:'6px'}}>O livro sugere 5 passos — a tabela abaixo é o Passo 2 (a matriz). Faça nesta ordem:</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>1. Long list:</strong> antes de pontuar, liste todos os canais possíveis, sem censura — pense em onde seu público já está, física e digitalmente.</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>2. Filtro (a tabela abaixo):</strong> pontue cada canal em 6 critérios — quanto maior a nota, melhor o canal nesse aspecto.</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>3. Top 3 ("anel interno"):</strong> dos canais com melhor nota, escolha 2 canais de tração (foco principal) + 1 de apoio.</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>4. Experimentos curtos (2-4 semanas):</strong> teste um canal por vez, com uma métrica de sucesso definida — mudar tudo ao mesmo tempo impede saber o que funcionou.</p>
+          <p className="mini-note"><strong>5. Dobrar a aposta:</strong> escale o canal vencedor e pause o resto.</p>
+        </div>
+        <div className="summary-block" style={{marginBottom:'16px'}}>
+          <h4>O que significa cada critério</h4>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>Custo:</strong> quanto mais barato de operar, maior a nota.</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>Alcance:</strong> quantas pessoas do seu público esse canal atinge.</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>Segmentação:</strong> o quanto o canal permite falar só com quem interessa (evita "falar com todo mundo").</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>Controle:</strong> o quanto você controla mensagem, frequência e distribuição (canal próprio tende a pontuar mais que orgânico).</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>Mensurável:</strong> o quanto dá para medir se funcionou (ex.: registrar origem com UTM/planilha por canal).</p>
+          <p className="mini-note"><strong>Inclusivo:</strong> o quanto o canal funciona também para quem tem menos acesso digital (ex.: rádio comunitária, cartaz, bilhete impresso).</p>
+        </div>
         <div className="table-wrap"><table className="tbl">
           <thead><tr><th>Canal</th><th>Custo</th><th>Alcance</th><th>Segm.</th><th>Controle</th><th>Mensur.</th><th>Inclusivo</th><th>Nota</th><th></th></tr></thead>
           <tbody>
@@ -372,6 +390,7 @@ function ArtLeanCanvas({data,setData,goHome}){
             ))}
           </tbody>
         </table></div>
+        <p className="mini-note" style={{marginTop:'6px'}}>Escala de 0 a 10 por critério (o livro sugere 1-5; aqui é só mais granular) — o que importa é comparar canais entre si, não o valor absoluto. Mix online + offline com propósito: evite "só online" ou "só offline".</p>
         <button className="add-row-btn" onClick={addCanal}>+ adicionar canal</button>
       </div>
      )
@@ -420,14 +439,23 @@ function ArtLeanCanvas({data,setData,goHome}){
      book:<><p>VRIO: sua solução cria Valor, é Rara, é difícil/custosa de Imitar, e você está Organizado para explorá-la? Se alguma resposta for "não", o diferencial ainda não é vantagem.</p></>,
      render:()=>(
       <div>
+        <div className="summary-block" style={{marginBottom:'16px'}}>
+          <h4>Como pontuar cada letra (0 = não, 2 = sim, com folga)</h4>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>V — Valor:</strong> a solução reduz uma dor ou gera um ganho significativo para o usuário?</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>R — Raridade:</strong> poucos concorrentes têm isso (dados, acesso, know-how, confiança local)?</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>I — Imitabilidade:</strong> copiar isso custa caro ou demora (tempo, contratos, cultura)?</p>
+          <p className="mini-note" style={{marginBottom:'6px'}}><strong>O — Organização:</strong> você tem processos, pessoas, métricas e governança para de fato extrair esse valor?</p>
+          <p className="mini-note">Checagem rápida do livro: se a resposta a qualquer uma das 4 perguntas acima for "não", esse "diferencial" ainda não é uma vantagem defensável — é só uma característica.</p>
+        </div>
         <SliderField label="Valor" value={s.vrio.v} onChange={v=>patch({vrio:{...s.vrio,v}})} />
         <SliderField label="Raridade" value={s.vrio.r} onChange={v=>patch({vrio:{...s.vrio,r:v}})} />
         <SliderField label="Imitabilidade (dificuldade de copiar)" value={s.vrio.i} onChange={v=>patch({vrio:{...s.vrio,i:v}})} />
         <SliderField label="Organização" value={s.vrio.o} onChange={v=>patch({vrio:{...s.vrio,o:v}})} />
         <span className={"badge "+(vrioTravado?'warning':'success')}>{vrioSum}/8 — {vrioTravado?'ainda não é vantagem defensável':'vantagem em construção'}</span>
         <div style={{marginTop:'16px'}}>
+          <p className="mini-note" style={{marginBottom:'8px'}}><strong>Moat</strong> = barreira defensiva sustentável: o que torna sua solução difícil de copiar ou superar no médio/longo prazo. Marque os que se aplicam ao seu caso.</p>
           <CheckGroup label="Tipo(s) de moat" options={MOAT_TIPOS} values={s.moats} onChange={v=>patch({moats:v})} />
-          <ListField label="Flywheel (ciclo virtuoso, em 4 passos)" items={s.flywheel} onChange={v=>patch({flywheel:v})} placeholder="Ex.: mais parceiros → rotas mais densas → custo por kg ↓ → atrai novos parceiros" />
+          <ListField label="Flywheel (ciclo virtuoso, em 4 passos)" items={s.flywheel} onChange={v=>patch({flywheel:v})} placeholder="Ex.: mais parceiros → rotas mais densas → custo por kg ↓ → atrai novos parceiros" hint='Um flywheel encadeia 4 passos em ciclo, cada um alimentando o próximo — como no exemplo do livro: "mais parceiros → mais doações → rotas mais densas → custo por kg ↓ → atração de novos parceiros".' />
         </div>
       </div>
      )

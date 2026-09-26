@@ -421,9 +421,20 @@ function ArtIdeacao({data,setData,goHome}){
      render:()=> <ListField label="Ideias em 5 minutos (quanto mais, melhor)" items={s.brainstorm} onChange={v=>patch({brainstorm:v})} placeholder="Ex.: carona solidária entre vizinhos, app de bicicletas comunitárias…" />
     },
     {label:'SCAMPER',
-     book:<><p>Acrônimo para estimular variações sobre uma ideia já existente: Substituir, Combinar, Adaptar, Modificar, Propor novos usos, Eliminar, Reverter.</p></>,
+     book:<><p>O SCAMPER não gera ideias novas do zero — ele pega <strong>uma ideia que já saiu do brainstorming</strong> (etapa anterior) e força variações sobre ela, pergunta por pergunta: Substituir, Combinar, Adaptar, Modificar, Propor novos usos, Eliminar, Reverter.</p></>,
      render:()=>(
        <div>
+         <div className="summary-block" style={{marginBottom:'16px'}}>
+           <h4>Como usar o SCAMPER</h4>
+           <p className="mini-note" style={{marginBottom:'6px'}}>Escolha a ideia mais promissora da lista de brainstorming e responda cada pergunta pensando <em>só nela</em> — o objetivo é variar e melhorar essa ideia, não criar ideias soltas. Pode deixar em branco a letra que não fizer sentido para o seu caso.</p>
+           <p className="mini-note" style={{marginBottom:'4px'}}><strong>Substituir:</strong> o que pode ser trocado nela? <em>Ex. do livro (ODS 12): embalagens plásticas → biodegradáveis.</em></p>
+           <p className="mini-note" style={{marginBottom:'4px'}}><strong>Combinar:</strong> o que pode ser unido a ela? <em>Ex. do livro (ODS 12): combinar coleta seletiva com programa de pontos.</em></p>
+           <p className="mini-note" style={{marginBottom:'4px'}}><strong>Adaptar:</strong> o que pode ser ajustado — de outro contexto ou solução — para funcionar aqui?</p>
+           <p className="mini-note" style={{marginBottom:'4px'}}><strong>Modificar:</strong> o que pode ser ampliado ou reduzido (escala, frequência, formato)?</p>
+           <p className="mini-note" style={{marginBottom:'4px'}}><strong>Propor novos usos:</strong> como reutilizar algo que já existe, com outra finalidade?</p>
+           <p className="mini-note" style={{marginBottom:'4px'}}><strong>Eliminar:</strong> o que pode ser retirado para simplificar a ideia?</p>
+           <p className="mini-note"><strong>Reverter:</strong> e se fizéssemos o oposto? <em>Ex. do livro (ODS 12): reverter a lógica do consumo — de comprar para alugar.</em></p>
+         </div>
          <Field label="Substituir — o que pode ser trocado?" value={s.scamper.substituir} onChange={v=>patch({scamper:{...s.scamper,substituir:v}})} />
          <Field label="Combinar — o que pode ser unido?" value={s.scamper.combinar} onChange={v=>patch({scamper:{...s.scamper,combinar:v}})} />
          <Field label="Adaptar — o que pode ser ajustado?" value={s.scamper.adaptar} onChange={v=>patch({scamper:{...s.scamper,adaptar:v}})} />
@@ -435,9 +446,16 @@ function ArtIdeacao({data,setData,goHome}){
      )
     },
     {label:'Design Sprint (versão reduzida)',
-     book:<><p>Método do Google Ventures para validar ideias rapidamente. Versão reduzida em 1 hora: entender → esboçar → escolher.</p></>,
+     book:<><p>Método criado no Google Ventures para validar ideias em até 5 dias. Aqui você faz uma versão comprimida em 1 hora dos 3 primeiros dias: entender → esboçar → escolher.</p></>,
      render:()=>(
        <div>
+         <div className="summary-block" style={{marginBottom:'16px'}}>
+           <h4>Como usar o Design Sprint reduzido</h4>
+           <p className="mini-note" style={{marginBottom:'6px'}}>O Design Sprint completo é: Dia 1 entender e mapear o problema, Dia 2 esboçar possíveis soluções, Dia 3 escolher a melhor ideia, Dia 4 prototipar rapidamente, Dia 5 testar com usuários reais. A versão reduzida do livro comprime os 3 primeiros dias em 1 hora — os dias 4 e 5 (protótipo e teste) acontecem nas próximas etapas do processo (ver artefatos de prototipação e teste).</p>
+           <p className="mini-note" style={{marginBottom:'4px'}}><strong>1. Entender</strong> (equivale ao Dia 1): retome o problema e a persona — o que você já sabe com certeza, e o que ainda é suposição?</p>
+           <p className="mini-note" style={{marginBottom:'4px'}}><strong>2. Esboçar</strong> (Dia 2): descreva 2-3 caminhos de solução possíveis, sem travar na primeira ideia que aparecer.</p>
+           <p className="mini-note"><strong>3. Escolher</strong> (Dia 3): qual desses caminhos você vai levar adiante, e por quê? <em>Ex. do livro (ODS 3): sprint para criar protótipo de app que ajuda idosos a lembrar de medicação.</em></p>
+         </div>
          <Field type="textarea" label="1. Entender o problema" value={s.sprint.entender} onChange={v=>patch({sprint:{...s.sprint,entender:v}})} />
          <Field type="textarea" label="2. Esboçar possíveis soluções" value={s.sprint.esbocar} onChange={v=>patch({sprint:{...s.sprint,esbocar:v}})} />
          <Field type="textarea" label="3. Escolher a melhor ideia" value={s.sprint.escolher} onChange={v=>patch({sprint:{...s.sprint,escolher:v}})} />
