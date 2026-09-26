@@ -315,6 +315,15 @@ function ArtLeanCanvas({data,setData,goHome}){
      book:<><p>A solução é o conjunto mínimo de funcionalidades que materializa a proposta de valor. Classifique cada funcionalidade sonhada com MoSCoW e mantenha só 2-3 essenciais no MVP.</p></>,
      render:()=>(
       <div>
+        <div className="summary-block" style={{marginBottom:'16px'}}>
+          <h4>Como usar o MoSCoW</h4>
+          <p className="mini-note" style={{marginBottom:'6px'}}>Para cada funcionalidade que você sonhou para o produto, pergunte "o que acontece se ela ficar de fora do lançamento?" e classifique com uma das 4 letras:</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>M — Must have (deve ter):</strong> sem isso o produto não entrega valor ou nem funciona. É inegociável no MVP.</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>S — Should have (deveria ter):</strong> importante e dói ficar sem, mas o produto sobrevive no lançamento sem isso — entra logo na próxima versão.</p>
+          <p className="mini-note" style={{marginBottom:'4px'}}><strong>C — Could have (poderia ter):</strong> desejável, mas de baixo impacto se ficar de fora agora — só entra se sobrar tempo/recurso.</p>
+          <p className="mini-note" style={{marginBottom:'6px'}}><strong>W — Won't have (não vai ter, por enquanto):</strong> uma decisão consciente de deixar fora desta versão — evita que o escopo infle sem critério.</p>
+          <p className="mini-note">Sinal de alerta: se quase tudo virar "M", o corte não está sendo feito de verdade. Num MVP saudável, a maioria cai em S/C/W.</p>
+        </div>
         <div className="table-wrap"><table className="tbl">
           <thead><tr><th>Funcionalidade</th><th style={{width:'130px'}}>Classificação</th><th>Justificativa</th><th></th></tr></thead>
           <tbody>
@@ -328,16 +337,18 @@ function ArtLeanCanvas({data,setData,goHome}){
             ))}
           </tbody>
         </table></div>
+        <p className="mini-note" style={{marginTop:'6px'}}>Na justificativa, explique <em>por que</em> essa é a classificação certa — é isso que você vai defender se alguém perguntar "por que não incluímos essa funcionalidade agora?".</p>
         <button className="add-row-btn" onClick={addFunc}>+ adicionar funcionalidade</button>
         <div className="summary-block" style={{marginTop:'14px'}}>
           <h4>Corte radical — só o "Must Have"</h4>
+          <p className="mini-note" style={{marginBottom:'8px'}}>Esta lista é o seu MVP de verdade: se algo aqui embaixo não for absolutamente essencial, volte na tabela e reclassifique como S, C ou W.</p>
           {s.funcionalidades.filter(f=>f.classificacao==='M'&&f.nome).map(f=><p key={f.id} style={{color:'var(--ink)'}}>• {f.nome}</p>)}
           {s.funcionalidades.filter(f=>f.classificacao==='M'&&f.nome).length===0 && <p className="mini-note">Marque funcionalidades como "M" para vê-las aqui.</p>}
         </div>
         <div className="grid-3" style={{marginTop:'8px'}}>
-          <Field label="MVP (0–3 meses)" value={s.roadmap.mvp} onChange={v=>patch({roadmap:{...s.roadmap,mvp:v}})} />
-          <Field label="Versão 1 (3–6 meses)" value={s.roadmap.v1} onChange={v=>patch({roadmap:{...s.roadmap,v1:v}})} />
-          <Field label="Versão 2 (6–12 meses)" value={s.roadmap.v2} onChange={v=>patch({roadmap:{...s.roadmap,v2:v}})} />
+          <Field label="MVP (0–3 meses)" value={s.roadmap.mvp} onChange={v=>patch({roadmap:{...s.roadmap,mvp:v}})} hint="O que entra na primeira versão — normalmente os itens 'Must have'." />
+          <Field label="Versão 1 (3–6 meses)" value={s.roadmap.v1} onChange={v=>patch({roadmap:{...s.roadmap,v1:v}})} hint="Os 'Should have' que ficaram de fora do MVP." />
+          <Field label="Versão 2 (6–12 meses)" value={s.roadmap.v2} onChange={v=>patch({roadmap:{...s.roadmap,v2:v}})} hint="Os 'Could have' e o que hoje é 'Won't have' mas pode voltar a fazer sentido." />
         </div>
       </div>
      )
