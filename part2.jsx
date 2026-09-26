@@ -51,12 +51,17 @@ function ArtJornada({data,setData,goHome}){
      book:<p>Liste as etapas principais (início, meio, fim) e descreva o que o usuário faz e onde/como interage com o serviço (touchpoints) em cada uma.</p>,
      render:()=>(
       <div>
+        <div className="summary-block" style={{marginBottom:'16px'}}>
+          <h4>O que preencher em cada campo</h4>
+          <p className="mini-note" style={{marginBottom:'6px'}}><strong>Ação:</strong> o que a persona faz de fato nessa etapa — o comportamento concreto e observável (o verbo da etapa: "pesquisa", "liga", "espera"), não o que ela pensa ou sente.</p>
+          <p className="mini-note"><strong>Ponto de contato (touchpoint):</strong> onde e como acontece essa interação — a tela, o app, a notificação, o atendente, o objeto físico ou o lugar em que a persona encontra o serviço naquele momento.</p>
+        </div>
         {s.etapas.map((e,i)=>(
           <div key={e.id} className="summary-block">
             <div className="toolbar-top"><strong className="mono">Etapa {i+1}</strong><button className="icon-btn" onClick={()=>removeEtapa(i)}>×</button></div>
             <Field label="Nome da etapa" value={e.nome} onChange={v=>updateEtapa(i,'nome',v)} placeholder="Ex.: Planejamento" />
-            <Field label="Ação da persona" value={e.acao} onChange={v=>updateEtapa(i,'acao',v)} placeholder="Ex.: consulta transporte no app" />
-            <Field label="Ponto de contato (touchpoint)" value={e.contato} onChange={v=>updateEtapa(i,'contato',v)} placeholder="Ex.: app, notificação push, ponto físico" />
+            <Field label="Ação da persona" value={e.acao} onChange={v=>updateEtapa(i,'acao',v)} placeholder="Ex.: consulta transporte no app" hint="O comportamento observável da persona nessa etapa — o que ela efetivamente faz, não o que pensa ou sente." />
+            <Field label="Ponto de contato (touchpoint)" value={e.contato} onChange={v=>updateEtapa(i,'contato',v)} placeholder="Ex.: app, notificação push, ponto físico" hint="O canal, tela, objeto ou pessoa por onde a interação acontece nesse momento." />
           </div>
         ))}
         <button className="add-row-btn" onClick={addEtapa}>+ adicionar etapa</button>
@@ -83,10 +88,15 @@ function ArtJornada({data,setData,goHome}){
      book:<p>Mapeie o que o sistema/equipe fazem nos bastidores para cada etapa funcionar, e aponte oportunidades para reduzir frustrações ou potencializar ganhos.</p>,
      render:()=>(
       <div>
+        <div className="summary-block" style={{marginBottom:'16px'}}>
+          <h4>O que preencher em cada campo</h4>
+          <p className="mini-note" style={{marginBottom:'6px'}}><strong>Backstage:</strong> o que acontece "por trás das cortinas" para essa etapa funcionar — o que a equipe, o sistema ou um parceiro fazem, mesmo sem a persona perceber diretamente. Ex.: um servidor processando o pagamento, um entregador sendo notificado, um atendente consultando o histórico.</p>
+          <p className="mini-note"><strong>Oportunidade de melhoria:</strong> um ponto fraco ou um potencial que essa etapa revela — algo que, se ajustado, reduziria a frustração ou aumentaria a satisfação da persona. É a semente para a ideação no próximo capítulo.</p>
+        </div>
         {s.etapas.map((e,i)=>(
           <div key={e.id} className="grid-2">
-            <Field label={(e.nome||'Etapa '+(i+1))+' — backstage'} type="textarea" rows={2} value={e.backstage} onChange={v=>updateEtapa(i,'backstage',v)} />
-            <Field label={(e.nome||'Etapa '+(i+1))+' — oportunidade de melhoria'} type="textarea" rows={2} value={e.oportunidade} onChange={v=>updateEtapa(i,'oportunidade',v)} />
+            <Field label={(e.nome||'Etapa '+(i+1))+' — backstage'} type="textarea" rows={2} value={e.backstage} onChange={v=>updateEtapa(i,'backstage',v)} hint="O que acontece nos bastidores (equipe, sistema, parceiros) para essa etapa funcionar, mesmo sem a persona ver." />
+            <Field label={(e.nome||'Etapa '+(i+1))+' — oportunidade de melhoria'} type="textarea" rows={2} value={e.oportunidade} onChange={v=>updateEtapa(i,'oportunidade',v)} hint="O que poderia melhorar nessa etapa — uma dor a resolver ou um momento a potencializar." />
           </div>
         ))}
       </div>
