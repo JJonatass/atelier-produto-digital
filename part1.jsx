@@ -351,7 +351,20 @@ function useProjectOds(data,setData){
   return [ods, setOds];
 }
 
-function SummaryShell({title,n,icon,id,summaryText,onEdit,onHome,children}){
+/* Checagem de coerência: cada item {level:'ok'|'warn'|'info', text}. Regras vêm do livro. */
+function Coherence({checks}){
+  if(!checks || !checks.length) return null;
+  const icon={ok:'✓',warn:'!',info:'?'};
+  const warns=checks.filter(c=>c.level==='warn').length;
+  return (
+    <div className="coh">
+      <h4>Checagem de coerência <span className={"badge "+(warns?'warning':'success')}>{warns?warns+' ponto(s) para revisar':'tudo certo'}</span></h4>
+      <ul>{checks.map((c,i)=><li key={i} className={'coh-'+c.level}><span className="coh-ic">{icon[c.level]}</span><span>{c.text}</span></li>)}</ul>
+    </div>
+  );
+}
+
+function SummaryShell({title,n,icon,id,summaryText,onEdit,onHome,children,checks}){
   const [promptOpen,setPromptOpen] = useState(false);
   const prompt = useMemo(()=>buildInfographicPrompt({id,title,n,summaryText}), [id,title,n,summaryText]);
   return (
@@ -375,6 +388,7 @@ function SummaryShell({title,n,icon,id,summaryText,onEdit,onHome,children}){
           <div style={{marginTop:'10px'}}><CopyButton text={prompt} label="Copiar prompt" /></div>
         </div>
       )}
+      <Coherence checks={checks} />
       <div>{children}</div>
     </div>
   );
@@ -526,8 +540,15 @@ function ArtIdeacao({data,setData,goHome}){
 
   if(showSummary){
     const full = `ENUNCIADO DO PROBLEMA\n${s.enunciadoProblema||'—'}\n\nBRAINSTORMING\n${(s.brainstorm||[]).filter(Boolean).map(i=>'- '+i).join('\n')||'—'}\n\nSCAMPER\nSubstituir: ${s.scamper.substituir||'—'}\nCombinar: ${s.scamper.combinar||'—'}\nAdaptar: ${s.scamper.adaptar||'—'}\nModificar: ${s.scamper.modificar||'—'}\nPropor novos usos: ${s.scamper.propor||'—'}\nEliminar: ${s.scamper.eliminar||'—'}\nReverter: ${s.scamper.reverter||'—'}\n\nDESIGN SPRINT\nEntender: ${s.sprint.entender||'—'}\nEsboçar: ${s.sprint.esbocar||'—'}\nEscolher: ${s.sprint.escolher||'—'}\n\nENUNCIADO DA SOLUÇÃO\n${s.enunciadoSolucao||'—'}`;
+    const filled=a=>(a||[]).filter(x=>x&&String(x).trim()).length; const sc=Object.values(s.scamper||{}).filter(Boolean).length; const sp=s.sprint||{}; const checks=[
+      {level:(s.enunciadoProblema&&s.enunciadoProblema.length<=250)?'ok':'warn', text:(s.enunciadoProblema?'Enunciado do problema com '+s.enunciadoProblema.length+' caracteres':'Enunciado do problema vazio')+' — o livro pede um enunciado curto e objetivo (≤ 250 caracteres).'},
+      {level:(s.enunciadoSolucao&&s.enunciadoSolucao.length<=250)?'ok':'warn', text:(s.enunciadoSolucao?'Enunciado da solução com '+s.enunciadoSolucao.length+' caracteres':'Enunciado da solução vazio')+' — também deve ser simples e ter ≤ 250 caracteres.'},
+      {level:filled(s.brainstorm)>=3?'ok':'info', text:'Brainstorming: '+filled(s.brainstorm)+' ideia(s). Quantidade importa mais que qualidade no começo; o exercício do livro termina compartilhando as 3 melhores ideias.'},
+      {level:sc>0?'ok':'warn', text:sc>0?'SCAMPER aplicado em '+sc+' das 7 perguntas.':'SCAMPER sem nenhuma resposta: o livro aplica o SCAMPER a uma ideia que já saiu do brainstorming.'},
+      {level:(sp.entender&&sp.esbocar&&sp.escolher)?'ok':'warn', text:(sp.entender&&sp.esbocar&&sp.escolher)?'Design Sprint reduzido completo (entender → esboçar → escolher).':'Design Sprint reduzido incompleto: faltam etapas entre entender, esboçar e escolher.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={full} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={full} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <div className="summary-block"><h4>Enunciado da solução</h4><p style={{color:'var(--ink)'}}>{s.enunciadoSolucao||'Ainda não definido.'}</p></div>
         <div className="summary-block"><h4>Brainstorming</h4>{(s.brainstorm||[]).filter(Boolean).map((it,i)=><p key={i} style={{color:'var(--ink)'}}>• {it}</p>)}</div>
         <div className="summary-block"><h4>SCAMPER</h4>

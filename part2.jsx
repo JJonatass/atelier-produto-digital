@@ -134,8 +134,14 @@ function ArtJornada({data,setData,goHome}){
 
   if(showSummary){
     const txt = `JORNADA DO USUÁRIO\nPersona: ${s.persona||'—'}\nObjetivo: ${s.objetivo||'—'}\n\n`+s.etapas.map((e,i)=>`Etapa ${i+1} — ${e.nome||'(sem nome)'}\n  Ação: ${e.acao||'—'}\n  Ponto de contato: ${e.contato||'—'}\n  Emoção: ${EMOTION_LABELS[e.emocao]}\n  Backstage: ${e.backstage||'—'}\n  Oportunidade: ${e.oportunidade||'—'}`).join('\n\n');
+    const et=s.etapas||[]; const nomeadas=et.filter(e=>e.nome&&e.nome.trim()); const baixas=et.filter(e=>e.emocao<=1); const semOpp=baixas.filter(e=>!(e.oportunidade&&e.oportunidade.trim())); const checks=[
+      {level:(s.persona&&s.objetivo)?'ok':'warn', text:(s.persona&&s.objetivo)?'Persona e objetivo definidos.':'Defina a persona e o objetivo: a jornada é sempre a de uma pessoa específica tentando alcançar algo.'},
+      {level:nomeadas.length>=3?'ok':'warn', text:'Etapas nomeadas: '+nomeadas.length+'. O livro divide a experiência em início, meio e fim (mínimo de 3 fases).'},
+      {level:et.every(e=>e.acao&&e.contato)?'ok':'warn', text:et.every(e=>e.acao&&e.contato)?'Toda etapa tem ação e ponto de contato.':'Há etapas sem ação ou sem ponto de contato (o que a persona faz e onde encontra o serviço).'},
+      {level:baixas.length===0?'info':(semOpp.length===0?'ok':'warn'), text:baixas.length===0?'Nenhuma etapa com emoção negativa. Confira se o mapa de humor reflete a realidade: frustrações ocultas são onde estão as oportunidades de inovação.':(semOpp.length===0?'Toda etapa com frustração tem uma oportunidade registrada.':'Etapa(s) com emoção negativa sem oportunidade: '+semOpp.map(e=>e.nome||'(sem nome)').join(', ')+'. Se a curva desce em etapas críticas, a solução precisa ser repensada.')},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <div className="summary-block"><h4>Persona</h4><p style={{color:'var(--ink)'}}>{s.persona||'—'} · objetivo: {s.objetivo||'—'}</p></div>
         <div className="journey-scroll"><div className="journey-row">
           {s.etapas.map((e,i)=>(
@@ -207,8 +213,14 @@ function ArtCsd({data,setData,goHome}){
   ];
   if(showSummary){
     const txt = `MATRIZ CSD\nContexto: ${s.contexto||'—'}\n\nCERTEZAS\n${s.certezas.filter(Boolean).map(i=>'- '+i).join('\n')||'—'}\n\nSUPOSIÇÕES\n${s.suposicoes.filter(Boolean).map(i=>'- '+i).join('\n')||'—'}\n\nDÚVIDAS\n${s.duvidas.filter(Boolean).map(i=>'- '+i).join('\n')||'—'}`;
+    const fl=a=>(a||[]).filter(x=>x&&String(x).trim()); const duv=fl(s.duvidas); const semPergunta=duv.filter(d=>d.indexOf('?')<0); const checks=[
+      {level:fl(s.certezas).length?'ok':'warn', text:fl(s.certezas).length?fl(s.certezas).length+' certeza(s). Devem ser fatos comprovados, com base em dados ou experiência prática.':'Sem certezas registradas: o que a equipe realmente sabe, com base em dados ou experiência prática?'},
+      {level:fl(s.suposicoes).length?'ok':'warn', text:fl(s.suposicoes).length?fl(s.suposicoes).length+' suposição(ões) — cada uma vira uma hipótese a testar.':'Sem suposições registradas: o que a equipe acredita, mas ainda não validou?'},
+      {level:duv.length?(semPergunta.length?'warn':'ok'):'warn', text:duv.length?(semPergunta.length?'Dúvidas devem ser perguntas abertas; reescreva em forma de pergunta: '+semPergunta.join(' | '):duv.length+' dúvida(s) escritas como pergunta — viram perguntas de pesquisa ou entrevistas.'):'Sem dúvidas registradas: deixar dúvidas sem registro é um dos problemas que a CSD resolve.'},
+      {level:'info', text:'Próximo passo racional: teste as suposições primeiro e investigue as dúvidas; só as certezas devem sustentar decisões de curto prazo.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <p style={{color:'var(--ink)',marginBottom:'14px'}}>{s.contexto}</p>
         <div className="board">
           <div className="board-col"><h4>Certezas</h4>{s.certezas.filter(Boolean).map((i,idx)=><div className="board-item" key={idx}>{i}</div>)}</div>
@@ -244,7 +256,7 @@ function ArtLeanCanvas({data,setData,goHome}){
     receitaModelos:[], precificacao:'', receitaMix:'',
     custos:{cf:10000,cvu:60,preco:100},
     metricas:{nsm:'',drivers:['',''],guardrails:[''],estrato:''},
-    vrio:{v:0,r:0,i:0,o:0}, moats:[], flywheel:['','','',''],
+    vrio:{v:0,r:0,i:0,o:0}, vrioEv:{v:'',r:'',i:'',o:''}, experimentoCanais:'', moats:[], flywheel:['','','',''],
     viabilidade:{tecnica:3,economica:3,ambiental:3,social:3,escalabilidade:3,risco:3,tecnicaOk:null,economicaOk:null,socioOk:null},
     step:0, done:false
   };
@@ -460,6 +472,7 @@ function ArtLeanCanvas({data,setData,goHome}){
         </table></div>
         <p className="mini-note" style={{marginTop:'6px'}}>Escala de 0 a 10 por critério (o livro sugere 1-5; aqui é só mais granular) — o que importa é comparar canais entre si, não o valor absoluto. Mix online + offline com propósito: evite "só online" ou "só offline".</p>
         <button className="add-row-btn" onClick={addCanal}>+ adicionar canal</button>
+        <div style={{marginTop:'16px'}}><Field type="textarea" label="Experimento curto dos canais de tração (2–4 semanas) e métrica de sucesso" value={s.experimentoCanais||''} onChange={v=>patch({experimentoCanais:v})} placeholder="Ex.: WhatsApp dos feirantes — 1 teste por canal; sucesso = 20 doadores cadastrados em 3 semanas" hint="Passo 4 do Bullseye: um teste por canal, cada um com uma métrica de sucesso definida. Sem métrica, o canal não pode ser julgado." /></div>
       </div>
      )
     },
@@ -537,9 +550,13 @@ function ArtLeanCanvas({data,setData,goHome}){
           <p className="mini-note">Checagem rápida do livro: se a resposta a qualquer uma das 4 perguntas acima for "não", esse "diferencial" ainda não é uma vantagem defensável — é só uma característica.</p>
         </div>
         <SliderField label="Valor" value={s.vrio.v} onChange={v=>patch({vrio:{...s.vrio,v}})} />
+        <Field label="Evidência da nota de Valor" value={(s.vrioEv||{}).v||''} onChange={x=>patch({vrioEv:{...(s.vrioEv||{}),v:x}})} placeholder="Ex.: 8 de 10 entrevistados relataram perder alimento por falta de rota de doação" hint="Justifique a nota com um fato, dado ou documento. Nota sem evidência é só opinião." />
         <SliderField label="Raridade" value={s.vrio.r} onChange={v=>patch({vrio:{...s.vrio,r:v}})} />
+        <Field label="Evidência da nota de Raridade" value={(s.vrioEv||{}).r||''} onChange={x=>patch({vrioEv:{...(s.vrioEv||{}),r:x}})} placeholder="Ex.: acordo com 3 feiras do bairro que concorrentes ainda não têm" hint="Justifique a nota com um fato, dado ou documento. Nota sem evidência é só opinião." />
         <SliderField label="Imitabilidade (dificuldade de copiar)" value={s.vrio.i} onChange={v=>patch({vrio:{...s.vrio,i:v}})} />
+        <Field label="Evidência da nota de Imitabilidade" value={(s.vrioEv||{}).i||''} onChange={x=>patch({vrioEv:{...(s.vrioEv||{}),i:x}})} placeholder="Ex.: contrato de exclusividade de 12 meses + base de dados própria" hint="Justifique a nota com um fato, dado ou documento. Nota sem evidência é só opinião." />
         <SliderField label="Organização" value={s.vrio.o} onChange={v=>patch({vrio:{...s.vrio,o:v}})} />
+        <Field label="Evidência da nota de Organização" value={(s.vrioEv||{}).o||''} onChange={x=>patch({vrioEv:{...(s.vrioEv||{}),o:x}})} placeholder="Ex.: SOP de triagem de 1 página e responsável por rota definido" hint="Justifique a nota com um fato, dado ou documento. Nota sem evidência é só opinião." />
         <span className={"badge "+(vrioTravado?'warning':'success')}>{vrioSum}/8 — {vrioTravado?'ainda não é vantagem defensável':'vantagem em construção'}</span>
         <div style={{marginTop:'16px'}}>
           <p className="mini-note" style={{marginBottom:'8px'}}><strong>Moat</strong> = barreira defensiva sustentável: o que torna sua solução difícil de copiar ou superar no médio/longo prazo. Marque os que se aplicam ao seu caso.</p>
@@ -578,9 +595,25 @@ function ArtLeanCanvas({data,setData,goHome}){
   ];
 
   if(showSummary){
-    const txt = `LEAN CANVAS\n\n1. SEGMENTO DE CLIENTES\n${s.segmentos.filter(Boolean).map(i=>'- '+i).join('\n')}\n\n2. PROPOSTA DE VALOR\n${s.pvuTexto||'—'}\nDetalhes — categoria: ${s.pvuDetalhes.categoria||'—'} · alternativa: ${s.pvuDetalhes.alternativa||'—'} · diferencial: ${s.pvuDetalhes.diferencial||'—'} · prazo/contexto: ${s.pvuDetalhes.prazoContexto||'—'} · evidência: ${s.pvuDetalhes.evidencia||'—'} · mecanismo: ${s.pvuDetalhes.mecanismo||'—'} · métrica: ${s.pvuDetalhes.metrica||'—'}\n(rubrica: ${rubricaSum}/12)\n\n3. SOLUÇÃO / MVP\n${s.funcionalidades.filter(f=>f.nome).map(f=>'- ['+f.classificacao+'] '+f.nome).join('\n')}\nRoadmap — MVP: ${s.roadmap.mvp||'—'} | V1: ${s.roadmap.v1||'—'} | V2: ${s.roadmap.v2||'—'}\n\n4. CANAIS\n${s.canais.filter(c=>c.nome).map(c=>'- '+c.nome+' (nota '+notaCanal(c)+')').join('\n')}\n\n5. FONTES DE RECEITA\n${s.receitaModelos.join(', ')||'—'}\nPrecificação: ${s.precificacao||'—'}\n${s.receitaMix||''}\n\n6. ESTRUTURA DE CUSTOS\nCF: R$ ${s.custos.cf} · CVu: R$ ${s.custos.cvu} · Preço: R$ ${s.custos.preco}\nMCu: R$ ${mcu.toFixed(2)} · Q*: ${qEq!==null?Math.ceil(qEq):'—'} · R*: ${rEq!==null?'R$ '+rEq.toFixed(2):'—'}\n\n7. MÉTRICAS-CHAVE\nNSM: ${s.metricas.nsm||'—'}\nDrivers: ${s.metricas.drivers.filter(Boolean).join(', ')||'—'}\nGuardrails: ${s.metricas.guardrails.filter(Boolean).join(', ')||'—'}\n\n8. VANTAGEM COMPETITIVA\nVRIO: ${vrioSum}/8\nMoats: ${s.moats.join(', ')||'—'}\nFlywheel: ${s.flywheel.filter(Boolean).join(' → ')||'—'}\n\n9. VIABILIDADE\nTécnica ${s.viabilidade.tecnica}/5 · Econômica ${s.viabilidade.economica}/5 · Ambiental ${s.viabilidade.ambiental}/5 · Social ${s.viabilidade.social}/5 · Escalabilidade ${s.viabilidade.escalabilidade}/5 · Risco ${s.viabilidade.risco}/5`;
+    const txt = `LEAN CANVAS\n\n1. SEGMENTO DE CLIENTES\n${s.segmentos.filter(Boolean).map(i=>'- '+i).join('\n')}\n\n2. PROPOSTA DE VALOR\n${s.pvuTexto||'—'}\nDetalhes — categoria: ${s.pvuDetalhes.categoria||'—'} · alternativa: ${s.pvuDetalhes.alternativa||'—'} · diferencial: ${s.pvuDetalhes.diferencial||'—'} · prazo/contexto: ${s.pvuDetalhes.prazoContexto||'—'} · evidência: ${s.pvuDetalhes.evidencia||'—'} · mecanismo: ${s.pvuDetalhes.mecanismo||'—'} · métrica: ${s.pvuDetalhes.metrica||'—'}\n(rubrica: ${rubricaSum}/12)\n\n3. SOLUÇÃO / MVP\n${s.funcionalidades.filter(f=>f.nome).map(f=>'- ['+f.classificacao+'] '+f.nome).join('\n')}\nRoadmap — MVP: ${s.roadmap.mvp||'—'} | V1: ${s.roadmap.v1||'—'} | V2: ${s.roadmap.v2||'—'}\n\n4. CANAIS\n${s.canais.filter(c=>c.nome).map(c=>'- '+c.nome+' (nota '+notaCanal(c)+')').join('\n')}\nExperimento e métrica: ${s.experimentoCanais||'—'}\n\n5. FONTES DE RECEITA\n${s.receitaModelos.join(', ')||'—'}\nPrecificação: ${s.precificacao||'—'}\n${s.receitaMix||''}\n\n6. ESTRUTURA DE CUSTOS\nCF: R$ ${s.custos.cf} · CVu: R$ ${s.custos.cvu} · Preço: R$ ${s.custos.preco}\nMCu: R$ ${mcu.toFixed(2)} · Q*: ${qEq!==null?Math.ceil(qEq):'—'} · R*: ${rEq!==null?'R$ '+rEq.toFixed(2):'—'}\n\n7. MÉTRICAS-CHAVE\nNSM: ${s.metricas.nsm||'—'}\nDrivers: ${s.metricas.drivers.filter(Boolean).join(', ')||'—'}\nGuardrails: ${s.metricas.guardrails.filter(Boolean).join(', ')||'—'}\n\n8. VANTAGEM COMPETITIVA\nVRIO: ${vrioSum}/8 (V: ${(s.vrioEv||{}).v||'sem evidência'} | R: ${(s.vrioEv||{}).r||'sem evidência'} | I: ${(s.vrioEv||{}).i||'sem evidência'} | O: ${(s.vrioEv||{}).o||'sem evidência'})\nMoats: ${s.moats.join(', ')||'—'}\nFlywheel: ${s.flywheel.filter(Boolean).join(' → ')||'—'}\n\n9. VIABILIDADE\nTécnica ${s.viabilidade.tecnica}/5 · Econômica ${s.viabilidade.economica}/5 · Ambiental ${s.viabilidade.ambiental}/5 · Social ${s.viabilidade.social}/5 · Escalabilidade ${s.viabilidade.escalabilidade}/5 · Risco ${s.viabilidade.risco}/5`;
+    const fl=a=>(a||[]).filter(x=>x&&String(x).trim()); const mCount=(s.funcionalidades||[]).filter(f=>f.nome&&f.classificacao==='M').length; const nCanais=(s.canais||[]).filter(c=>c.nome).length; const drv=fl(s.metricas.drivers).length; const gr=fl(s.metricas.guardrails).length; const v3=s.viabilidade||{}; const v3vals=[v3.tecnicaOk,v3.economicaOk,v3.socioOk]; const opps=((data.jornada&&data.jornada.etapas)||[]).map(e=>e.oportunidade).filter(o=>o&&o.trim()); const duvs=fl(data.csd&&data.csd.duvidas); const checks=[
+      {level:fl(s.segmentos).length?'ok':'warn', text:fl(s.segmentos).length?fl(s.segmentos).length+' segmento(s) de clientes definido(s).':'Defina o segmento de clientes: a PVU, os canais e as métricas dependem dele.'},
+      {level:s.pvuTexto?(rubricaSum>=9?'ok':'warn'):'warn', text:!s.pvuTexto?'Proposta de Valor ainda não escrita.':('Rubrica da PVU: '+rubricaSum+'/12. '+(rubricaSum>=9?'≥ 9/12 = publicável/validar.':'≤ 8 = refine e reteste antes de seguir.'))},
+      {level:mCount===0?'warn':(mCount<=3?'ok':'warn'), text:mCount===0?'Nenhuma funcionalidade marcada como Must have: o que é essencial para validar a proposta?':(mCount<=3?mCount+' funcionalidade(s) Must have.':mCount+' Must haves: o corte radical do livro deixa apenas 3 como M. Reclassifique o excedente em S, C ou W.')},
+      {level:nCanais>=3?'ok':'warn', text:nCanais>=3?nCanais+' canais avaliados (o livro escolhe 3 para o anel interno: 2 de tração + 1 de apoio).':'Apenas '+nCanais+' canal(is) avaliado(s): faça uma long list e escolha o anel interno de 3 canais (2 de tração + 1 de apoio).'},
+      {level:mcu>0?'ok':'warn', text:mcu>0?'Margem de contribuição unitária positiva (R$ '+mcu.toFixed(2)+').':'Margem de contribuição unitária ≤ 0: com esse preço e custo variável não há ponto de equilíbrio.'},
+      {level:(s.metricas.nsm&&drv>=2&&drv<=4&&gr>=1&&gr<=2)?'ok':'warn', text:'Árvore de métricas: NSM '+(s.metricas.nsm?'definida':'vazia')+', '+drv+' driver(s) (ideal 2–4), '+gr+' guardrail(s) (ideal 1–2).'},
+      {level:(['v','r','i','o'].some(k=>s.vrio[k]>0&&!((s.vrioEv||{})[k]||'').trim()))?'warn':'ok', text:(['v','r','i','o'].some(k=>s.vrio[k]>0&&!((s.vrioEv||{})[k]||'').trim()))?'Há letras do VRIO com nota acima de 0 e sem evidência: nota sem fato, dado ou documento é só opinião.':'Todas as notas do VRIO acima de 0 têm evidência registrada.'},
+      {level:(s.experimentoCanais||'').trim()?'ok':'warn', text:(s.experimentoCanais||'').trim()?'Experimento de 2–4 semanas com métrica de sucesso definido para os canais de tração.':'Falta o experimento curto (2–4 semanas) com métrica de sucesso para os canais de tração (passo 4 do Bullseye).'},
+      {level:vrioTravado?'warn':'ok', text:vrioTravado?'VRIO com pelo menos um "não" (nota 0): o livro diz que, nesse caso, o diferencial ainda não é vantagem.':'VRIO sem nenhum "não": vantagem em construção.'},
+      {level:(s.moats.length&&fl(s.flywheel).length>=4)?'ok':'warn', text:(s.moats.length?s.moats.length+' tipo(s) de moat':'Nenhum tipo de moat marcado')+' e flywheel com '+fl(s.flywheel).length+'/4 passos.'},
+      {level:v3vals.some(v=>v===false)?'warn':(v3vals.every(v=>v===true)?'ok':'info'), text:v3vals.some(v=>v===false)?'Viabilidade 3E com ao menos um "não": só quando técnica, econômica e socioambiental se sobrepõem há inovação viável.':(v3vals.every(v=>v===true)?'Checklist 3E todo positivo.':'Checklist 3E ainda não respondido por completo.')},
+      {level:(data.ideacao&&data.ideacao.enunciadoSolucao)?'ok':'info', text:(data.ideacao&&data.ideacao.enunciadoSolucao)?'Enunciado da solução (Ideação): "'+data.ideacao.enunciadoSolucao+'" — a PVU e o MVP entregam exatamente isso?':'Conexão: faltou o enunciado da solução no artefato de Ideação (2.2).'},
+      {level:'info', text:opps.length?'Conexão com a Jornada — oportunidades que você mapeou: '+opps.join('; ')+'. Cada uma aparece no MVP, no roadmap ou foi descartada de propósito?':'Conexão: a Jornada (2.3) ainda não tem oportunidades registradas para alimentar o MVP.'},
+      {level:'info', text:duvs.length?'Conexão com a CSD — dúvidas ainda em aberto: '+duvs.join(' | ')+'. Algum experimento ou métrica do canvas responde a elas?':'Conexão: a Matriz CSD (2.4) não tem dúvidas registradas.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <div className="grid-3">
           <div className="summary-block"><h4>1 · Segmentos</h4>{s.segmentos.filter(Boolean).map((i,x)=><p key={x} style={{color:'var(--ink)',fontSize:'13px'}}>{i}</p>)}</div>
           <div className="summary-block"><h4>2 · Proposta de Valor</h4><p style={{color:'var(--ink)',fontSize:'13px'}}>{s.pvuTexto||'—'}</p></div>

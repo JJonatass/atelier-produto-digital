@@ -330,8 +330,9 @@ function ArtCores({data,setData,goHome}){
 
   if(showSummary){
     const txt = `PALETA DE CORES — ${ods||'(ODS não definida)'}\nPrimária: ${s.primaria} — ${s.justificativaPrimaria||''}\nSecundária: ${s.secundaria} — ${s.justificativaSecundaria||''}\nNeutras: ${s.neutras.join(', ')}\nEstados — success:${s.estados.success} error:${s.estados.error} warning:${s.estados.warning} info:${s.estados.info}\nEsquema escolhido: ${ESQUEMA_LABELS[s.esquemaEscolhido]||s.esquemaEscolhido}\nContraste texto/fundo: ${ratio.toFixed(2)}:1`;
+    const checks=[{level:ratio>=4.5?'ok':'warn', text:'Contraste texto/fundo escolhido: '+ratio.toFixed(2)+':1. '+(ratio>=4.5?'Atende à regra de 4,5:1 para texto normal.':'Abaixo de 4,5:1: reprova para texto normal (WCAG AA).')},{level:ods?'ok':'info', text:ods?'ODS do projeto: '+ods+'.':'Escolha a ODS: ela orienta a psicologia das cores da identidade.'},{level:(s.justificativaPrimaria&&s.justificativaPrimaria.trim())?'ok':'warn', text:(s.justificativaPrimaria&&s.justificativaPrimaria.trim())?'Cor primária justificada pela psicologia das cores.':'Falta justificar a cor primária pela psicologia das cores.'}];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <div className="swatch-row" style={{flexWrap:'wrap',marginBottom:'14px'}}>
           <div className="swatch" style={{background:s.primaria}} title="Primária"></div>
           <div className="swatch" style={{background:s.secundaria}} title="Secundária"></div>
@@ -499,8 +500,9 @@ function ArtTipografia({data,setData,goHome}){
   ];
   if(showSummary){
     const txt = `TIPOGRAFIA — ${ods||''}\nPúblico: ${s.publico||'—'}\nTom: ${s.adjetivos.filter(Boolean).join(', ')}\nTipo de fonte: ${s.tipoFonte||'—'} — ${s.justificativaTipo||''}\nTítulos: ${s.fonteTitulos} | Corpo: ${s.fonteCorpo}\nEscala — H1:${s.escala.h1}px H2:${s.escala.h2}px H3:${s.escala.h3}px Body:${s.escala.body}px Caption:${s.escala.caption}px Button:${s.escala.button}px`;
+    const checks=[{level:s.escala.body>=16?'ok':'warn', text:'Corpo de texto em '+s.escala.body+'px. '+(s.escala.body>=16?'Atende ao mínimo de 16px do checklist do livro.':'O checklist do livro pede corpo com pelo menos 16px (ou 1rem).')},{level:(s.adjetivos.filter(Boolean).length===3)?'ok':'warn', text:s.adjetivos.filter(Boolean).length+'/3 adjetivos de tom definidos: eles orientam a escolha do tipo de fonte.'},{level:(s.tipoFonte&&s.justificativaTipo)?'ok':'warn', text:(s.tipoFonte&&s.justificativaTipo)?'Tipo de fonte escolhido e justificado.':'Escolha o tipo de fonte e justifique pelo tom desejado.'}];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <GoogleFontLoader family={s.fonteTitulos} /><GoogleFontLoader family={s.fonteCorpo} />
         <div className="font-preview">
           <div style={{fontFamily:"'"+s.fonteTitulos+"', serif",fontSize:s.escala.h1+'px',fontWeight:700}}>{s.fonteTitulos} + {s.fonteCorpo}</div>
