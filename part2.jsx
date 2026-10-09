@@ -45,10 +45,20 @@ function ArtJornada({data,setData,goHome}){
   const steps = [
     {label:'Persona e objetivo',
      book:<p>Defina a persona e o que ela deseja alcançar. Exemplo do livro (ODS 2): José, agricultor familiar → doar alimentos excedentes.</p>,
+     teach:{
+       why:"Antes de desenhar a jornada, é preciso saber de quem ela é. A jornada do usuário é uma narrativa visual ou descritiva que mostra, passo a passo, as ações, percepções e emoções de uma pessoa ao usar um produto ou serviço. Ela ajuda a ver o sistema pelos olhos do usuário e revela frustrações ocultas e oportunidades de inovação.",
+       how:["Quem é a persona?","O que ela deseja alcançar? Esse é o objetivo que a jornada vai percorrer."],
+       example:<><p><strong>ODS 2:</strong> José, agricultor familiar, quer doar alimentos excedentes.</p><p><strong>ODS 11:</strong> Maria, estudante da periferia, quer chegar à faculdade de forma confiável.</p></>
+     },
      render:()=>(<div><Field label="Persona" value={s.persona} onChange={v=>patch({persona:v})} placeholder="Ex.: Maria, estudante da periferia" /><Field label="Objetivo da jornada" value={s.objetivo} onChange={v=>patch({objetivo:v})} placeholder="Ex.: chegar à faculdade de forma confiável" /></div>)
     },
     {label:'Etapas, ações e pontos de contato',
      book:<p>Liste as etapas principais (início, meio, fim) e descreva o que o usuário faz e onde/como interage com o serviço (touchpoints) em cada uma.</p>,
+     teach:{
+       why:"A jornada facilita a transição entre a ideação (ideias soltas) e a prototipação (fluxos e telas). Dividir a experiência em etapas permite ver onde a persona age e onde encontra o serviço.",
+       how:["Divida a experiência em fases claras: início, meio e fim."],
+       example:<><p><strong>ODS 2 (José):</strong></p><ul><li>Etapas: abrir app, cadastrar alimento, confirmar coleta, entrega.</li><li>Ações: José abre o aplicativo, preenche formulário, recebe notificação, entrega os alimentos.</li><li>Pontos de contato: smartphone, notificação push, ponto de coleta físico.</li></ul><p><strong>ODS 11 (Maria):</strong> Planejamento (consulta transporte, no app), Espera (vai ao ponto, ponto físico), Viagem (compartilha carona, no app) e Chegada (chega à faculdade, presencial).</p></>
+     },
      render:()=>(
       <div>
         <div className="summary-block" style={{marginBottom:'16px'}}>
@@ -70,6 +80,11 @@ function ArtJornada({data,setData,goHome}){
     },
     {label:'Emoções (mapa de humor)',
      book:<p>Marque como o usuário se sente em cada etapa. A curva de humor mostra vales (frustração) e picos (encantamento) — termômetro da experiência.</p>,
+     teach:{
+       why:"A jornada não deve mostrar só o que a persona faz, mas como ela se sente em cada etapa. O mapa de humor é uma linha que acompanha as emoções ao longo da jornada, registrando satisfação, neutralidade ou frustração. Ele mostra a experiência de forma mais empática, evidencia os momentos críticos (vales da curva), ajuda a identificar os momentos de encantamento (picos) e gera insumos para priorizar funcionalidades na prototipação.",
+       how:["Marque como a persona se sente em cada etapa (por exemplo: animada, frustrada, aliviada)."],
+       example:<><p><strong>ODS 2:</strong> José fica esperançoso na abertura, inseguro na confirmação e satisfeito na entrega.</p><p><strong>ODS 11:</strong> Maria fica ansiosa no planejamento, insegura na espera, aliviada na viagem e orgulhosa na chegada.</p></>
+     },
      render:()=>(
       <div>
         {s.etapas.map((e,i)=>(
@@ -86,6 +101,10 @@ function ArtJornada({data,setData,goHome}){
     },
     {label:'Backstage e oportunidades',
      book:<p>Mapeie o que o sistema/equipe fazem nos bastidores para cada etapa funcionar, e aponte oportunidades para reduzir frustrações ou potencializar ganhos.</p>,
+     teach:{
+       why:"As oportunidades de melhoria vêm de reduzir frustrações ou potencializar ganhos, e a própria jornada orienta a arquitetura da informação. Se a persona precisa consultar horários, deve existir uma tela de busca simples. Se ela tem ansiedade com atrasos, deve existir notificação em tempo real.",
+       example:<><p><strong>ODS 2 (José):</strong></p><ul><li>Backstage: servidor valida login, ONG organiza rota, banco de dados registra coleta.</li><li>Oportunidades: incluir tutorial inicial, permitir cadastro por foto, dar feedback em tempo real.</li></ul><p><strong>ODS 11 (Maria):</strong></p><ul><li>Planejamento: o algoritmo calcula rotas; oportunidade de uma tela simples e rápida.</li><li>Espera: localização em tempo real; oportunidade de notificação de chegada.</li><li>Viagem: motorista confirmado; oportunidade de um botão SOS para segurança.</li><li>Chegada: registro automático; oportunidade de pontos de recompensa.</li></ul></>
+     },
      render:()=>(
       <div>
         <div className="summary-block" style={{marginBottom:'16px'}}>
@@ -104,6 +123,11 @@ function ArtJornada({data,setData,goHome}){
     },
     {label:'Mapa de humor',
      book:<p>Observe a curva: se ela desce muito em etapas críticas, a solução precisa ser repensada. Onde estão os vales e os picos da sua jornada?</p>,
+     teach:{
+       why:"O mapa de humor é um termômetro da experiência: se a curva desce muito em etapas críticas, a solução precisa ser repensada.",
+       how:["Localize os vales (frustração) e os picos (encantamento) da curva.","Use os vales para decidir o que repensar e os picos para saber o que reforçar."],
+       example:"ODS 11 (Maria): o humor fica baixo no início, sobe durante a viagem e chega a um pico de satisfação na chegada."
+     },
      render:()=>(<div><MoodChart etapas={s.etapas} /></div>)
     },
   ];
@@ -144,18 +168,40 @@ function ArtCsd({data,setData,goHome}){
   const steps = [
     {label:'Problema e contexto',
      book:<p>A Matriz CSD organiza o conhecimento da equipe: o que já sabemos (certezas), o que achamos (suposições) e o que precisamos investigar (dúvidas). Comece definindo o problema e o contexto.</p>,
+     teach:{
+       why:"Numa equipe, certezas, palpites e dúvidas costumam se misturar. A Matriz CSD (Certezas, Suposições e Dúvidas) torna explícito o que já sabemos, o que achamos e o que ainda precisamos investigar. O livro compara a CSD a limpar a mesa antes de cozinhar: só quando sabemos o que temos, o que achamos que temos e o que falta, conseguimos preparar algo consistente.",
+       how:["Defina o problema e o contexto em que ele acontece."],
+       example:<><p><strong>ODS 4:</strong> evasão escolar em escolas públicas.</p><p><strong>ODS 11:</strong> trabalhadores de periferias gastam mais de 2 horas por dia em deslocamento.</p></>
+     },
      render:()=> <Field type="textarea" label="Problema e contexto" value={s.contexto} onChange={v=>patch({contexto:v})} placeholder="Ex.: 40% dos alunos faltam às aulas regularmente por dificuldade de transporte." />
     },
     {label:'Certezas',
      book:<p>Informações validadas: fatos comprovados, baseados em dados ou experiência prática.</p>,
+     teach:{
+       why:"Certezas são fatos comprovados, baseados em dados ou experiência prática. Elas baseiam decisões de curto prazo.",
+       how:["Liste só informações validadas: pesquisas confiáveis, estatísticas, dados ou experiência prática."],
+       example:<><p><strong>ODS 4:</strong> “40% dos alunos faltam às aulas regularmente por dificuldade de transporte.”</p><p><strong>ODS 11:</strong> “O transporte público é irregular e pouco confiável.” e “IBGE aponta que 37% gastam mais de 1h30 em deslocamentos.”</p></>,
+       mistakes:["Tratar suposições como fatos: o livro alerta que, sem separar a CSD, isso acontece com frequência."]
+     },
      render:()=> <ListField label="Certezas" items={s.certezas} onChange={v=>patch({certezas:v})} placeholder="Ex.: o transporte público é irregular e pouco confiável" />
     },
     {label:'Suposições',
      book:<p>O que a equipe acredita, mas ainda sem validação — viram hipóteses a serem testadas.</p>,
+     teach:{
+       why:"Suposições são o que a equipe acredita, mas ainda não validou. Na matriz, elas viram hipóteses a serem testadas.",
+       how:["Anote o que a equipe acredita ser verdade, mesmo sem comprovação."],
+       example:<><p><strong>ODS 4:</strong> “Se oferecermos transporte gratuito, a evasão cairá.”</p><p><strong>ODS 11:</strong> “As pessoas aceitariam usar caronas comunitárias com vizinhos.” e “As empresas apoiariam financeiramente esse transporte comunitário.”</p><p><strong>ODS 6:</strong> “Se houvesse um sistema de denúncia digital, as autoridades agiriam mais rápido.”</p></>
+     },
      render:()=> <ListField label="Suposições" items={s.suposicoes} onChange={v=>patch({suposicoes:v})} placeholder="Ex.: se oferecermos transporte gratuito, a evasão cairá" />
     },
     {label:'Dúvidas',
      book:<p>Perguntas abertas que não temos resposta no momento — viram perguntas de pesquisa ou entrevistas.</p>,
+     teach:{
+       why:"Dúvidas são perguntas abertas que precisam de investigação. Na matriz, elas viram perguntas de pesquisa ou entrevistas. Registrá-las gera clareza sobre as incertezas e ajuda a priorizar a pesquisa: testar as hipóteses e investigar as dúvidas primeiro.",
+       how:["Escreva em forma de pergunta aquilo para o que a equipe ainda não tem resposta.","Use a matriz como guia de ação: suposições viram hipóteses a testar, dúvidas viram perguntas de pesquisa e certezas baseiam decisões de curto prazo."],
+       example:<><p><strong>ODS 4:</strong> “Quais fatores além do transporte influenciam a evasão?”</p><p><strong>ODS 11:</strong> “Como garantir segurança nas caronas?” e “Qual seria o modelo de pagamento sustentável?”</p><p><strong>ODS 6:</strong> “Como engajar moradores que não usam smartphones?”</p></>,
+       mistakes:["Deixar dúvidas sem registro: o livro cita isso como um dos problemas que a CSD resolve."]
+     },
      render:()=> <ListField label="Dúvidas" items={s.duvidas} onChange={v=>patch({duvidas:v})} placeholder="Ex.: quais fatores além do transporte influenciam a evasão?" />
     },
   ];
@@ -260,10 +306,22 @@ function ArtLeanCanvas({data,setData,goHome}){
   const steps = [
     {label:'1. Segmento de Clientes',
      book:<p>Quem são as personas afetadas? Liste os grupos que sentem a dor — quem usa, quem se beneficia indiretamente e quem eventualmente patrocina o impacto.</p>,
+     teach:{
+       why:"O Lean Canvas, criado por Ash Maurya, é uma versão adaptada do Business Model Canvas. Ele condensa numa página os elementos essenciais que transformam uma ideia em um modelo inicial de negócio ou impacto social, e ajuda a sair do achismo e estruturar hipóteses claras para serem testadas. Tudo começa por saber quem sente a dor.",
+       how:["Identifique a persona principal.","Escolha um segmento prioritário no início, em vez de falar com todo mundo."],
+       example:<><p><strong>ODS 2 (Fome Zero), personas afetadas:</strong></p><ul><li>Agricultores familiares que perdem alimentos por falta de escoamento.</li><li>Famílias de baixa renda que sofrem com insegurança alimentar.</li><li>ONGs e instituições sociais que distribuem alimentos, mas têm dificuldades logísticas.</li></ul></>,
+       mistakes:["Todos os públicos: escolha um segmento prioritário no início (armadilha listada na Proposta de Valor)."]
+     },
      render:()=> <ListField label="Segmentos de clientes" items={s.segmentos} onChange={v=>patch({segmentos:v})} placeholder="Ex.: agricultores familiares que perdem alimentos por falta de escoamento" />
     },
     {label:'2. Proposta de Valor',
      book:<><p>A PVU é a promessa central de transformação — não é missão, slogan ou lista de funcionalidades. Comece pelo JTBD (Jobs To Be Done): "Quando [situação], eu quero [motivação], para [resultado esperado]". Preencha também os detalhes complementares abaixo — cada template usa alguns deles. Depois de escolher um template, use o botão "Preencher automaticamente" para gerar a PVU já com tudo isso encaixado.</p></>,
+     teach:{
+       why:"A PVU é a promessa central de transformação que a solução entrega a um segmento específico, em um contexto específico, de modo preferível às alternativas. Ela não é missão ou visão, slogan criativo, lista de funcionalidades (que são meios, não fins) nem o pitch inteiro.",
+       how:["Use o JTBD para achar o trabalho real do usuário: Quando [situação], eu quero [motivação], para [resultado esperado].","Rascunhe várias PVUs com os templates (o livro sugere 5 a 7) e mantenha 2 finalistas.","Verifique com sim ou não: nomeia quem se beneficia? Explicita a mudança gerada? Mostra como é melhor que as alternativas? Traz prova ou caminho de prova? Se alguma resposta for não, refaça.","Alinhe a PVU a métricas de resultado, não de vaidade (por exemplo: kg de alimento redistribuído, evasão escolar reduzida)."],
+       example:<><p><strong>ODS 2 (Fome Zero):</strong> “Para feirantes com excedentes e ONGs locais, nosso sistema comunitário redistribui alimentos em bom estado em até 12h, reduzindo ≥40% do desperdício por feira, com rotas solidárias validadas por ONGs — diferente de apps genéricos, operamos 100% offline-first com WhatsApp nas áreas sem 4G.”</p><p><strong>ODS 4 (Educação):</strong> “Permite que estudantes estudem offline 100% do conteúdo base e sincronizem quando houver Wi-Fi da escola, elevando a taxa de conclusão ≥25% em 3 meses, com trilhas curtas e acompanhamento de tutores.”</p><p><strong>ODS 11 (Mobilidade):</strong> “Coordena caronas comunitárias por bairro em horários de pico, reduzindo tempo de espera em 30% e custo por trajeto em 20%, com parcerias de associações locais e mecanismos de segurança verificados.”</p></>,
+       mistakes:["Vaguidão (“plataforma inovadora e escalável…”): diga o que muda.","Feature-centrismo (“tem IA, blockchain…”): pergunte qual resultado isso cria.","Todos os públicos: escolha um segmento prioritário no início.","Sem prova: inclua evidência (número, parceiro, estudo, piloto).","Jargões: teste com leigos; se tropeçarem, reescreva."]
+     },
      render:()=>(
        <div>
          <label className="field-label">JTBD — três variações</label>
@@ -313,6 +371,11 @@ function ArtLeanCanvas({data,setData,goHome}){
     },
     {label:'3. Solução / MVP',
      book:<><p>A solução é o conjunto mínimo de funcionalidades que materializa a proposta de valor. Classifique cada funcionalidade sonhada com MoSCoW e mantenha só 2-3 essenciais no MVP.</p></>,
+     teach:{
+       why:"A solução é o conjunto mínimo de funcionalidades que materializa a proposta de valor e permite validar se a ideia atende às necessidades dos clientes. Ela é o mínimo testável e o ponto de partida para aprender com o usuário. Não é um plano detalhado de desenvolvimento, um protótipo completo com todas as features desejadas, nem uma promessa genérica (“um app que resolve tudo”). Construa para aprender rápido, não para escalar rápido.",
+       example:<><p><strong>ODS 3 (Saúde e Bem-Estar):</strong> o problema é que idosos esquecem de tomar medicamentos. A PVU é “garantir adesão ao tratamento com lembretes simples e confiáveis”.</p><ul><li>MVP: lembrete automático de horário de remédio, botão “já tomei” para registro e relatório básico para o cuidador.</li><li>Fica para depois: integração com farmácia, gamificação, IA de recomendações.</li></ul><p><strong>Outros MVPs do livro:</strong></p><ul><li>ODS 2: app simples para cadastro de alimentos e comunicação via WhatsApp.</li><li>ODS 4: caderno digital offline com sincronização quando houver internet.</li><li>ODS 6: sensor comunitário conectado a painel de qualidade da água.</li><li>ODS 11: planilha compartilhada de caronas solidárias organizada por bairro.</li></ul></>,
+       mistakes:["Overengineering: gastar meses em features que não validam nada.","Confundir MVP com “produto barato”: MVP é sobre aprendizado, não economia pura.","Ignorar feedback inicial: insistir em funcionalidades que ninguém usa.","Prometer escalabilidade antes da hora: primeiro valide se há valor."]
+     },
      render:()=>(
       <div>
         <div className="summary-block" style={{marginBottom:'16px'}}>
@@ -355,6 +418,11 @@ function ArtLeanCanvas({data,setData,goHome}){
     },
     {label:'4. Canais',
      book:<><p>Canal bom = encontro + adesão + retorno. Se só gera clique bonito, não é canal, é vaidade. Avalie cada canal e use a nota para escolher os do "anel interno" (processo Bullseye).</p></>,
+     teach:{
+       why:"Canais são os meios pelos quais o público toma conhecimento, acessa e usa a solução, e pelos quais você mantém relacionamento contínuo. Há duas dimensões: distribuição (como o usuário obtém a solução, por exemplo app store, WhatsApp, parceria com ONG, escola, prefeitura) e comunicação (como ele sabe e lembra da solução, por exemplo rádio comunitária, cartaz, e-mail, redes sociais). Não existe canal coringa: ele precisa combinar com o problema (onde a dor acontece), o segmento (onde o público já está) e a solução (qual o menor atrito para experimentar). Regra prática: se for preciso ensinar um novo hábito de mídia para ser encontrado, o canal está errado para o MVP.",
+       example:<><p><strong>ODS 2 (feiras e famílias):</strong></p><ul><li>Tração: WhatsApp (feirantes), rádio do bairro.</li><li>Apoio: cartaz com QR nas bancas e CRAS.</li><li>Retenção: grupo por bairro e lembretes nos dias de feira.</li></ul><p><strong>ODS 4 (escolas periféricas):</strong></p><ul><li>Tração: reuniões de pais, bilhetes na agenda, WhatsApp da turma.</li><li>Apoio: cartaz na escola, portal da secretaria.</li><li>Retenção: lembretes de estudo offline.</li></ul></>,
+       mistakes:["“Só online” ou “só offline”: faça um mix.","Falar com “todo mundo”: comece por persona e bairro ou turma.","Mudar tudo ao mesmo tempo: faça um teste por vez.","Não registrar a origem: use UTM simples ou uma planilha por canal.","Desrespeitar o opt-out: isso mata a confiança e quebra a LGPD."]
+     },
      render:()=>(
       <div>
         <div className="summary-block" style={{marginBottom:'16px'}}>
@@ -397,6 +465,11 @@ function ArtLeanCanvas({data,setData,goHome}){
     },
     {label:'5. Fontes de Receita',
      book:<><p>Receita não é lucro. Em projetos de impacto, quem paga pode ser diferente de quem usa. Escolha 1-2 modelos e uma estratégia de precificação coerente.</p></>,
+     teach:{
+       why:"Receita são as formas pelas quais o projeto gera entradas financeiras recorrentes ou pontuais para sustentar a operação. Não é lucro (resultado após os custos) nem dinheiro eventual sem previsibilidade. Em projetos de impacto, a receita pode vir de quem usa, de quem se beneficia indiretamente ou de quem patrocina o impacto (pagador diferente de usuário). Sustentabilidade financeira é receita previsível alinhada ao impacto.",
+       how:["Responda: quem paga (usuário, empresa, governo, ONG, patrocinador)? Quem captura o valor econômico? Quão frequente é o uso (repetição favorece assinatura ou cobrança por uso)? Há externalidades positivas (ODS) que patrocínio ou edital possam cobrir?","Pontue os modelos de 1 a 5 em aderência ao segmento, facilidade de cobrança, previsibilidade, escalabilidade e ética/ODS, e priorize o Top-2.","Na precificação, o livro recomenda a baseada em valor: o preço se ancora no resultado, por exemplo R$ por kg redistribuído."],
+       example:<><p><strong>ODS 2:</strong> patrocínio supermercadista (cota mensal), take rate simbólico por rota logística e editais anuais. Valor-âncora: R$/kg redistribuído e redução de custo de descarte.</p><p><strong>ODS 4:</strong> licenças para redes de ensino (B2G), assinatura para escola privada e treinamento docente. Valor-âncora: redução de evasão, aumento de proficiência, horas-aula efetivas.</p><p><strong>ODS 11:</strong> comissão baixa por carona solidária, patrocínio corporativo local e seguro comunitário em grupo. Valor-âncora: tempo economizado, redução de custo por trajeto, segurança.</p></>
+     },
      render:()=>(
       <div>
         <CheckGroup label="Modelos de receita (marque os que fazem sentido)" options={RECEITA_MODELOS} values={s.receitaModelos} onChange={v=>patch({receitaModelos:v})} />
@@ -407,6 +480,11 @@ function ArtLeanCanvas({data,setData,goHome}){
     },
     {label:'6. Estrutura de Custos',
      book:<><p>CT = CF + CVu×Q. Margem de contribuição unitária MCu = P − CVu. Ponto de equilíbrio Q* = CF / MCu. Receita de equilíbrio R* = CF / MC%.</p></>,
+     teach:{
+       why:"Receita mantém a ideia viva; custos certos mantêm a ideia de pé. Custos são os gastos necessários para conceber, operar e evoluir a solução. Não são uma lista de compras aleatória nem uma estimativa solta: o livro pede um modelo coerente que conecte custos, operação, métricas e viabilidade.",
+       how:["Inventário: liste os custos potenciais por categoria (pessoal, tech, operação, captação, compliance).","Classificação: marque cada custo como fixo (CF, não varia com o volume no curto prazo) ou variável (CV, cresce por unidade ou uso), e como direto ou indireto.","Driverização: vincule cada custo a um driver.","Unitarização: calcule o custo variável unitário (CVu), por exemplo R$/kg redistribuído ou R$/turma/mês.","Projeção: estime o volume (Q) por mês, para 12 meses.","Break-even: calcule o ponto de equilíbrio e as margens.","Sensibilidade: simule ±20% em preço, volume e CVu e veja o que mais pesa no resultado."],
+       example:<><p><strong>Cálculo do livro:</strong> se o preço (P) é R$ 100 e o custo variável por unidade (CVu) é R$ 60, cada venda contribui com R$ 40 (MCu) para cobrir os custos fixos e gerar lucro. Com custos fixos (CF) de R$ 10.000, é preciso vender 250 unidades para empatar (Q*). Com margem de contribuição percentual de 40% e CF de R$ 10.000, a receita de equilíbrio (R*) é R$ 25.000.</p><p><strong>ODS 2:</strong> os drivers são rotas/semana, km/rota, kg/rota e doadores ativos. O CVu reúne combustível, mensagens, avarias e embalagens. O CF reúne coordenação, cloud base e aluguel do ponto de apoio.</p></>
+     },
      render:()=>(
       <div>
         <div className="grid-3">
@@ -426,6 +504,12 @@ function ArtLeanCanvas({data,setData,goHome}){
     },
     {label:'7. Métricas-Chave',
      book:<><p>North Star Metric (NSM): uma métrica que captura o valor central entregue. Some 2-4 drivers e 1-2 guardrails (contrapesos que evitam efeitos colaterais).</p></>,
+     teach:{
+       why:"Métricas-chave são os indicadores prioritários que monitoram se a solução entrega valor ao público e à operação. Regra de ouro: se não ajuda a decidir, não é métrica-chave. Uma boa métrica não mede popularidade, mede transformação (outcomes e impacto), com traço de causalidade.",
+       how:["Monte a árvore de métricas: a North Star Metric no topo, depois 2 a 4 drivers e 1 a 2 guardrails.","Escreva uma mini teoria de mudança: se fizermos X com Y, veremos Z em T meses.","Dê a cada métrica uma definição operacional: fórmula, unidade, fonte, janela e responsável.","Confira o checklist SMART+I: específica, mensurável, acionável, relevante (ligada à PVU e ao ODS), temporal e inclusiva (observa recortes como bairro, escola, gênero e acessibilidade)."],
+       example:<><p><strong>ODS 2 (doação de alimentos):</strong></p><ul><li>NSM: kg de alimento redistribuídos/mês.</li><li>Drivers: doadores ativos/semana, taxa de comparecimento na rota, kg/rota.</li><li>Guardrails: % de avarias até 5%, SLA de entrega até 12h.</li><li>Estrato inclusivo: por bairro e dia de feira.</li></ul><p><strong>ODS 4 (plataforma de cursos online):</strong></p><ul><li>NSM: horas de aula assistidas/mês.</li><li>Drivers: alunos ativos/semana, taxa de conclusão de curso, média de aulas vistas por aluno.</li><li>Guardrails: taxa de reembolso até 3%, avaliação média dos cursos de pelo menos 4,2/5.</li><li>Estrato inclusivo: por faixa etária e tipo de dispositivo.</li></ul><p><strong>ODS 3 (telemedicina):</strong> NSM de consultas médicas realizadas/mês, com guardrails de tempo médio de espera até 10 min e cancelamento até 8%.</p></>,
+       mistakes:["Lei de Goodhart: quando uma métrica vira meta, deixa de ser boa métrica. Use guardrails e múltiplas fontes.","Vaidade: downloads, likes e visitas sem ação relevante não são valor.","Antes-depois ingênuo: evite atribuir causalidade sem controle; prefira pilotos A/B, grupos de comparação ou diferença-em-diferenças.","Métrica confusa: nomes ambíguos; padronize um glossário.","Atraso na leitura: defina cadência e responsáveis (sem dono, a métrica morre)."]
+     },
      render:()=>(
       <div>
         <Field label="North Star Metric" value={s.metricas.nsm} onChange={v=>patch({metricas:{...s.metricas,nsm:v}})} placeholder="Ex.: kg de alimento redistribuídos/mês" />
@@ -437,6 +521,11 @@ function ArtLeanCanvas({data,setData,goHome}){
     },
     {label:'8. Vantagem Competitiva',
      book:<><p>VRIO: sua solução cria Valor, é Rara, é difícil/custosa de Imitar, e você está Organizado para explorá-la? Se alguma resposta for "não", o diferencial ainda não é vantagem.</p></>,
+     teach:{
+       why:"Vantagem competitiva é um mecanismo defensável que permite entregar mais valor, com mais eficiência ou maior fidelidade do que as alternativas, e sustentá-lo no tempo. O livro usa a ideia de moat: uma barreira defensiva sustentável, algo difícil de copiar ou superar pelos concorrentes no médio e longo prazo.",
+       example:<><p><strong>ODS 2 (redistribuição local):</strong></p><ul><li>Moats: acordos com feiras e ONGs (acesso), SOP de triagem (qualidade), dados de previsibilidade por bairro.</li><li>Métricas: R$/kg em queda, avarias até 5%, parceiros renovados em pelo menos 80%.</li><li>Flywheel: mais parceiros, rotas mais densas, custo menor, mais parceiros.</li></ul><p><strong>ODS 4 (offline-first):</strong> moats de distribuição com secretarias, trilhas com tutoria local e dados de adesão offline. Defesa: custo marginal baixo por aluno e histórico pedagógico individual.</p></>,
+       mistakes:["Confundir com uma feature temporária: qualquer um implementa.","Confundir com slogan, estética de marca isolada ou “somos os primeiros” (ser o primeiro raramente é defesa real).","Apostar somente em preço baixo: guerra de preços é frágil."]
+     },
      render:()=>(
       <div>
         <div className="summary-block" style={{marginBottom:'16px'}}>
@@ -462,6 +551,12 @@ function ArtLeanCanvas({data,setData,goHome}){
     },
     {label:'9. Viabilidade',
      book:<><p>Viabilidade = "Podemos construir?" (técnica) + "Vale a pena financeiramente?" (econômica) + "Faz sentido para a sociedade/planeta?" (socioambiental). Só quando os três se sobrepõem há inovação viável.</p></>,
+     teach:{
+       why:"Viabilidade é o grau em que a solução é factível (técnica), sustentável (econômica) e desejável para a sociedade e o ambiente (socioambiental). Ela evita investir anos em algo inviável de implementar ou manter, dá credibilidade frente a parceiros, investidores e órgãos públicos e garante alinhamento com ODS e ESG. Só quando os três círculos (desejabilidade, viabilidade econômica e exequibilidade técnica) se sobrepõem temos inovação viável.",
+       how:["Técnica: avalie capacidades e recursos (equipe, know-how), infraestrutura, integrações, escalabilidade (o MVP funciona em piloto? cresce sem colapsar?) e riscos técnicos.","Econômica: avalie custos, receitas, unit economics (CAC, LTV, CVu, break-even), ROI e payback, dependência de grants e sensibilidade (pessimista, base, otimista).","Socioambiental: avalie o impacto positivo direto, o impacto negativo evitado, a inclusão, o alinhamento com ODS/ESG e os riscos socioambientais."],
+       example:<><p><strong>ODS 2:</strong> tecnicamente, app mobile e WhatsApp API são viáveis, mas a logística depende de uma frota mínima. Economicamente, o custo é de cerca de R$ 0,60/kg e a receita via patrocínio cobre R$ 0,70/kg. Socioambientalmente, o impacto líquido é positivo; o risco é o descarte inadequado de sobras, mitigado com compostagem comunitária.</p><p><strong>ODS 4:</strong> tablets offline-first são factíveis (risco: manutenção física). O CAPEX inicial é alto e o OPEX por aluno é baixo; o licenciamento cobre os custos. Atenção ao descarte de tablets: reciclagem formal.</p><p><strong>ODS 11:</strong> app leve com pontos fixos é viável (risco: adesão crítica mínima). Break-even com 120 viagens/dia. Risco de segurança de passageiros, mitigado com verificação comunitária.</p></>,
+       mistakes:["Superestimar a viabilidade porque só olhou para a técnica.","Ignorar custos indiretos e regulatórios (LGPD, seguros, manutenção).","Subestimar a capilaridade logística (ODS 2, 11).","Prometer impacto sem medir externalidades (ODS 13).","Confundir piloto pontual com viabilidade de escala."]
+     },
      render:()=>(
       <div>
         <div className="grid-3">

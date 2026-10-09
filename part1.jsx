@@ -185,6 +185,22 @@ function BookNote({children}){
   );
 }
 
+/* Bloco de ensino padrão: por quê / como fazer / exemplo do livro / erros comuns.
+   Uso em um passo: teach:{why:'...', how:['passo 1','passo 2'], example:<>...</>, mistakes:['erro 1','erro 2']}
+   Todos os campos são opcionais; textos devem vir do livro. */
+function Teach({why,how,example,mistakes,open=true}){
+  if(!why && !(how&&how.length) && !example && !(mistakes&&mistakes.length)) return null;
+  return (
+    <details className="teach" open={open}>
+      <summary>🎓 Aprenda antes de preencher</summary>
+      {why && <div className="teach-sec"><h5>Por que isso importa</h5><p>{why}</p></div>}
+      {how && how.length>0 && <div className="teach-sec"><h5>Como fazer</h5><ol>{how.map((h,i)=><li key={i}>{h}</li>)}</ol></div>}
+      {example && <div className="teach-sec teach-ex"><h5>Exemplo do livro</h5>{typeof example==='string'?<p>{example}</p>:example}</div>}
+      {mistakes && mistakes.length>0 && <div className="teach-sec teach-err"><h5>Erros comuns</h5><ul>{mistakes.map((m,i)=><li key={i}>{m}</li>)}</ul></div>}
+    </details>
+  );
+}
+
 function CopyButton({text,label}){
   const [copied,setCopied]=useState(false);
   function doCopy(){
@@ -298,6 +314,7 @@ function Screen({title,n,stepIndex,setStepIndex,steps,onDone,doneLabel,isDone}){
           ))}
         </div>
         {step.book && <BookNote>{step.book}</BookNote>}
+        {step.teach && <Teach key={stepIndex} {...step.teach} />}
         <div>{step.render()}</div>
         <div className="nav-row">
           <button className="btn ghost" disabled={stepIndex===0} onClick={()=>setStepIndex(stepIndex-1)}>← Voltar</button>
@@ -374,6 +391,11 @@ function ArtProblematizacao({data,setData,goHome}){
 
   const steps = [
     {label:'Como a problematização orienta a ideação',
+     teach:{
+       why:'Boas ideias são consequência direta de uma problematização bem feita. Sem essa conexão, você corre o risco de criar soluções criativas, tecnológicas e até bonitas, mas sem aderência, porque não respondem a uma dor real. O problema fornece os limites e os critérios de relevância; as ideias são tentativas de preencher esse espaço com soluções viáveis e inovadoras.',
+       how:['Enunciado do problema: use a frase-problema como guia. Toda ideia deve respondê-la.','Mapa de empatia: observe como o usuário vive a dor (o que pensa, sente, vê e faz).','Persona: em vez de pensar no usuário em geral, pense em uma pessoa concreta, como a Maria (agricultora, 45 anos) ou o João (estudante de periferia, 16 anos).','Concorrentes: veja onde já existe algo funcionando e onde estão as lacunas.'],
+       example:'ODS 4 (Educação de Qualidade): a persona é um estudante sem acesso estável à internet, e isso gera ideias de plataformas que funcionem offline ou kits de estudo distribuídos em pendrives. ODS 11 (Cidades Sustentáveis): apps de transporte já dão tempo real nas capitais, mas há lacuna em cidades médias e bairros periféricos, então a ideação foca em transporte comunitário local.'
+     },
      book:<>
        <p>Ideias boas não surgem do nada — são consequência direta de uma problematização bem feita. Sem essa conexão, corremos o risco de criar soluções criativas e até bonitas, mas que não têm aderência porque não respondem a uma dor real.</p>
        <p>A ideação deve ser encarada como uma ponte natural: o problema fornece os limites e os critérios de relevância; as ideias surgem como tentativas de preencher esse espaço com soluções viáveis e inovadoras. Quatro ferramentas do Capítulo 1 seguem guiando esse trabalho: o <strong>enunciado do problema</strong> (toda ideia deve responder à frase-problema), os <strong>mapas de empatia</strong> (o que o usuário pensa, sente, vê e faz), as <strong>personas</strong> (pensar na Maria ou no João, não "no usuário") e os <strong>concorrentes</strong> (onde já existe algo funcionando e onde estão as lacunas).</p>
@@ -387,6 +409,11 @@ function ArtProblematizacao({data,setData,goHome}){
      )
     },
     {label:'O risco de idear sem problema definido',
+     teach:{
+       why:'Sem um problema claro, a ideação se transforma em chuva de ideias desconectadas. Elas podem soar inovadoras, mas não têm raiz na realidade do usuário e, ao final, viram soluções que ninguém adota, porque não resolvem uma dor específica.',
+       example:'ODS 6 (Água Potável e Saneamento): o problema é que 40% das casas da comunidade não têm saneamento básico (dados de uma ONG local); o mapa de empatia mostra vergonha e preocupação com doenças; a persona é Ana, 15 anos, que divide um banheiro improvisado com 6 familiares. Só então surgem ideias com sentido: sistema comunitário de denúncia, app de monitoramento da qualidade da água e plataforma de crowdfunding para soluções locais.',
+       mistakes:['Partir de frases como "Vamos fazer um app com inteligência artificial!", "E se criarmos um chatbot para isso?" ou "Seria legal usar blockchain aqui!": soam inovadoras, mas não têm raiz na realidade do usuário.']
+     },
      book:<>
        <p>Sem um problema claro, a ideação vira uma chuva de ideias desconectadas — "vamos fazer um app com IA!", "e se criarmos um chatbot?", "seria legal usar blockchain!". Podem soar inovadoras, mas não têm raiz na realidade do usuário e, no fim, viram soluções que ninguém adota.</p>
        <p>Exemplo aplicado (ODS 6 – Água Potável e Saneamento): 40% das casas de uma comunidade não têm saneamento básico; o mapa de empatia mostra vergonha e preocupação com doenças; a persona é Ana, 15 anos, que compartilha banheiro improvisado com 6 familiares. Só a partir daí a ideação faz sentido: sistema comunitário de denúncia, monitoramento da qualidade da água, crowdfunding para soluções locais.</p>
@@ -422,14 +449,26 @@ function ArtIdeacao({data,setData,goHome}){
 
   const steps = [
     {label:'Enunciado do problema',
+     teach:{
+       why:'A fase de ideação é um convite à criatividade, mas não à imaginação solta: as ideias precisam estar ancoradas no problema definido, nas personas e nas dores reais levantadas. O enunciado do problema é o ponto de partida dessa ancoragem.',
+       example:'ODS 2 (Fome Zero): "Famílias em vulnerabilidade alimentar têm acesso limitado a alimentos frescos devido ao desperdício em feiras e mercados." Ideias possíveis a partir dele: aplicativo de redistribuição de alimentos, parcerias com motoboys locais para coleta, integração com bancos de alimentos.'
+     },
      book:<><p>A ideação deve ser encarada como uma ponte natural: o problema fornece os limites e os critérios de relevância; as ideias surgem como tentativas de preencher esse espaço.</p><p>Retome o enunciado do problema (≤250 caracteres) definido no Capítulo 1 — é ele que vai guiar toda a ideação.</p></>,
      render:()=> <Field label="Enunciado do problema" type="textarea" value={s.enunciadoProblema} onChange={v=>patch({enunciadoProblema:v})} placeholder="Ex.: Famílias em vulnerabilidade alimentar têm acesso limitado a alimentos frescos devido ao desperdício em feiras e mercados." hint="Máx. 250 caracteres — mantenha curto e objetivo." />
     },
     {label:'Brainstorming',
+     teach:{
+       why:'É a técnica clássica para gerar o máximo de ideias possível em pouco tempo. A ideação é caótica por natureza: muitas ideias surgem, algumas absurdas, outras promissoras, e a priorização vem depois.',
+       how:['Suspenda o julgamento inicial: toda ideia é bem-vinda.','No começo, quantidade importa mais do que qualidade.','Construa sobre a ideia do outro.','Garanta que todas as ideias estejam conectadas ao problema original e que sejam diversas (tecnológicas, sociais, logísticas, comunicacionais).'],
+       example:'ODS 11 (Mobilidade Urbana): carona solidária entre vizinhos, app de bicicletas comunitárias, linhas de ônibus sob demanda.'
+     },
      book:<><p>Técnica clássica: gerar o máximo de ideias possível em pouco tempo (5 minutos). Regras: suspenda o julgamento inicial, quantidade importa mais que qualidade no começo, e construa sobre a ideia do outro.</p></>,
      render:()=> <ListField label="Ideias em 5 minutos (quanto mais, melhor)" items={s.brainstorm} onChange={v=>patch({brainstorm:v})} placeholder="Ex.: carona solidária entre vizinhos, app de bicicletas comunitárias…" />
     },
     {label:'SCAMPER',
+     teach:{
+       why:'O SCAMPER é um acrônimo para estimular variações sobre soluções já existentes, com uma pergunta para cada letra.'
+     },
      book:<><p>O SCAMPER não gera ideias novas do zero — ele pega <strong>uma ideia que já saiu do brainstorming</strong> (etapa anterior) e força variações sobre ela, pergunta por pergunta: Substituir, Combinar, Adaptar, Modificar, Propor novos usos, Eliminar, Reverter.</p></>,
      render:()=>(
        <div>
@@ -455,6 +494,9 @@ function ArtIdeacao({data,setData,goHome}){
      )
     },
     {label:'Design Sprint (versão reduzida)',
+     teach:{
+       why:'O Design Sprint foi criado no Google Ventures para validar ideias em até 5 dias, passando por entender, esboçar, escolher, prototipar e testar.'
+     },
      book:<><p>Método criado no Google Ventures para validar ideias em até 5 dias. Aqui você faz uma versão comprimida em 1 hora dos 3 primeiros dias: entender → esboçar → escolher.</p></>,
      render:()=>(
        <div>
@@ -472,6 +514,11 @@ function ArtIdeacao({data,setData,goHome}){
      )
     },
     {label:'Enunciado da solução',
+     teach:{
+       why:'Assim como o problema foi reduzido a um enunciado curto e objetivo, a solução também deve começar de forma simples. O enunciado serve como norte inicial e deixa claro qual caminho será explorado.',
+       how:['Escreva a solução em uma frase curta, com no máximo 250 caracteres (o mesmo limite do enunciado do problema).','Confira se ela responde ao enunciado do problema que você definiu.'],
+       example:'Problema: "Famílias em vulnerabilidade alimentar têm acesso limitado a alimentos frescos devido ao desperdício em feiras e mercados." Solução curta: "Aplicativo que conecta feirantes e mercados a famílias em vulnerabilidade para redistribuição de alimentos excedentes."'
+     },
      book:<><p>Assim como o problema foi reduzido a um enunciado curto e objetivo, a solução também deve começar de forma simples — um enunciado que serve como norte inicial.</p></>,
      render:()=> <Field type="textarea" label="Enunciado da solução (≤ 250 caracteres)" value={s.enunciadoSolucao} onChange={v=>patch({enunciadoSolucao:v})} placeholder="Ex.: Aplicativo que conecta feirantes e mercados a famílias em vulnerabilidade para redistribuição de alimentos excedentes." />
     },

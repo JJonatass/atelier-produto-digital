@@ -96,6 +96,16 @@
   .step-dot.active{ border-color:var(--accent); color:var(--ink); background:var(--card); }
   .step-dot.active .num{ background:var(--accent); color:var(--accent-ink); }
   .step-dot.done .num{ background:var(--success); color:#fff; }
+  .teach{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-sm); margin-bottom:20px; }
+  .teach > summary{ cursor:pointer; padding:12px 16px; font-weight:700; font-size:13.5px; color:var(--accent); list-style:none; }
+  .teach > summary::-webkit-details-marker{ display:none; }
+  .teach[open] > summary{ border-bottom:1px solid var(--line-soft); }
+  .teach-sec{ padding:12px 16px 2px; }
+  .teach-sec h5{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-faint); margin:0 0 6px; }
+  .teach-sec p, .teach-sec li{ font-size:14px; color:var(--ink); line-height:1.55; }
+  .teach-sec ol, .teach-sec ul{ margin:0 0 8px; padding-left:20px; }
+  .teach-ex{ background:var(--card-2); }
+  .teach-err h5{ color:var(--accent-2); }
   .book-note{ background:var(--card-2); border:1px solid var(--line-soft); border-left:3px solid var(--accent-2); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:20px; }
   .book-note .tag{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-2); font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
   .book-note p:last-child{ margin-bottom:0; }
