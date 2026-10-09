@@ -119,8 +119,15 @@ function ArtFluxo({data,setData,goHome}){
 
   if(showSummary){
     const txt = `FLUXO DE TELAS — ${s.produto||'(sem nome)'}\n${s.descricao||''}\n\nSITEMAP\n${s.telas.filter(t=>t.nome).map(t=>'- '+t.nome+': '+(t.descricao||'')).join('\n')}\n\nFLUXO DE NAVEGAÇÃO\n${s.conexoes.filter(c=>c.de&&c.para).map(c=>c.de+' —['+c.evento+']→ '+c.para).join('\n')}\n\nANÁLISE CRÍTICA\nIntuitivo? ${s.analise.intuitivo||'—'}\nRedundâncias: ${s.analise.redundante||'—'}\nCoerência: ${s.analise.coerencia||'—'}\nArquitetura: ${s.analise.arquitetura||'—'}\nMelhorias: ${s.analise.melhorias||'—'}`;
+    const ne=a=>(a||[]).filter(x=>x&&String(x).trim()); const tl=(s.telas||[]).filter(t=>t.nome&&t.nome.trim()); const cx=(s.conexoes||[]).filter(c=>c.de||c.evento||c.para); const cxInc=cx.filter(c=>!(c.de&&c.evento&&c.para)); const an=s.analise||{}; const checks=[
+      {level:s.produto?'ok':'warn', text:s.produto?'Produto escolhido: '+s.produto+'.':'Escolha o aplicativo ou site que será mapeado.'},
+      {level:tl.length>=3?'ok':'warn', text:'Telas mapeadas: '+tl.length+'. O livro pede um produto com ao menos três seções ou funcionalidades principais.'},
+      {level:cx.length===0?'warn':(cxInc.length?'warn':'ok'), text:cx.length===0?'Sem conexões entre telas: o fluxo mostra de onde cada ação leva.':(cxInc.length?cxInc.length+' conexão(ões) incompleta(s): cada uma precisa de tela de origem, evento e tela de destino.':cx.length+' conexão(ões) completas (origem → evento → destino).')},
+      {level:(an.intuitivo&&an.redundante&&an.coerencia&&an.arquitetura&&an.melhorias)?'ok':'info', text:(an.intuitivo&&an.redundante&&an.coerencia&&an.arquitetura&&an.melhorias)?'Análise crítica completa.':'A análise crítica ainda tem campos em branco: é ela que transforma o mapa em melhorias.'},
+      {level:'info', text:'Conexão com a Jornada: cada etapa da jornada (2.3) tem pelo menos uma tela correspondente neste fluxo? O livro traduz primeiro a experiência da persona e só depois a arquitetura de informação e as telas.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <p style={{color:'var(--ink)'}}><strong>{s.produto}</strong> — {s.descricao}</p>
         <div className="summary-block"><h4>Sitemap</h4>{s.telas.filter(t=>t.nome).map(t=><p key={t.id} style={{color:'var(--ink)',fontSize:'13px'}}>▸ {t.nome} — {t.descricao}</p>)}</div>
         <div className="summary-block"><h4>Fluxo de navegação</h4>{s.conexoes.filter(c=>c.de&&c.para).map(c=><p key={c.id} className="mono" style={{color:'var(--ink)',fontSize:'13px'}}>{c.de} —[{c.evento}]→ {c.para}</p>)}</div>
@@ -590,8 +597,15 @@ function ArtIcones({data,setData,goHome}){
   ];
   if(showSummary){
     const txt = `ÍCONES E ICONOGRAFIA — ${ods}\n${s.fraseApp}\n\n`+s.acoes.filter(a=>a.acao).map(a=>a.icone+' '+a.acao+' — '+a.justificativa).join('\n');
+    const ac=(s.acoes||[]).filter(a=>a.acao&&a.acao.trim()); const semIc=ac.filter(a=>!(a.icone&&a.icone.trim())); const semJus=ac.filter(a=>!(a.justificativa&&a.justificativa.trim())); const rf=s.reflexao||{}; const checks=[
+      {level:ods?'ok':'info', text:ods?'ODS do projeto: '+ods+'.':'Escolha a ODS: ela dá o contexto de significado dos ícones.'},
+      {level:ac.length>=3?'ok':'warn', text:ac.length+' ação(ões) traduzida(s) em ícone. O exercício do livro parte de uma lista de ações principais do app.'},
+      {level:ac.length&&semIc.length===0?'ok':'warn', text:ac.length&&semIc.length===0?'Toda ação tem um ícone escolhido.':'Ações sem ícone: '+(semIc.map(a=>a.acao).join(', ')||'nenhuma ação preenchida')+'.'},
+      {level:ac.length&&semJus.length===0?'ok':'warn', text:ac.length&&semJus.length===0?'Todos os ícones têm justificativa de significado.':'Ícones sem justificativa: o significado depende de contexto, então explique por que cada ícone representa a ação.'},
+      {level:(rf.facil&&rf.ambiguo&&rf.ajudou)?'ok':'info', text:(rf.facil&&rf.ambiguo&&rf.ajudou)?'Reflexão completa (o que foi fácil, o que ficou ambíguo, o que ajudou).':'Reflexão incompleta: ela mostra quais ícones ainda são ambíguos.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <p style={{color:'var(--ink)'}}>{s.fraseApp}</p>
         {s.acoes.filter(a=>a.acao).map(a=><p key={a.id} style={{color:'var(--ink)'}}>{a.icone} <strong>{a.acao}</strong> — {a.justificativa}</p>)}
         <CopyButton text={txt} />
@@ -669,8 +683,13 @@ function ArtLayout({data,setData,goHome}){
   ];
   if(showSummary){
     const txt = `LAYOUT E ESPAÇAMENTO\nMargem lateral: ${s.margem}px | Colunas mobile: ${s.colunasMobile} | Colunas desktop: ${s.colunasDesktop}\nEscala: xxs${s.escala.xxs} xs${s.escala.xs} sm${s.escala.sm} md${s.escala.md} lg${s.escala.lg} xl${s.escala.xl}\nAlinhamento: ${s.alinhamento}\nComparação: ${s.comparacao||'—'}`;
+    const e=s.escala||{}; const ordem=['xxs','xs','sm','md','lg','xl']; const cres=ordem.every((k,i)=>i===0||e[k]>e[ordem[i-1]]); const checks=[
+      {level:cres?'ok':'warn', text:cres?'Escala de espaçamento crescente ('+ordem.map(k=>e[k]).join(' – ')+'): todo espaçamento da interface deve sair dela.':'A escala de espaçamento precisa crescer a cada degrau ('+ordem.map(k=>e[k]).join(' – ')+').'},
+      {level:(s.colunasMobile>=1&&s.colunasDesktop>=s.colunasMobile)?'ok':'warn', text:'Grid: '+s.colunasMobile+' coluna(s) no mobile e '+s.colunasDesktop+' no desktop, margem de '+s.margem+'px.'},
+      {level:(s.comparacao&&s.comparacao.trim())?'ok':'info', text:(s.comparacao&&s.comparacao.trim())?'Comparação entre a tela feita "no olho" e a organizada registrada.':'Falta registrar a comparação entre a versão "no olho" e a versão com grid e escala.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <p style={{color:'var(--ink)'}}>Margem {s.margem}px · grid {s.colunasMobile}/{s.colunasDesktop} colunas (mobile/desktop) · alinhamento {s.alinhamento}</p>
         <p style={{color:'var(--ink)'}}>{s.comparacao}</p>
         <CopyButton text={txt} />

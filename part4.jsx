@@ -46,8 +46,14 @@ function ArtTokens({data,setData,goHome}){
     },
   ];
   if(showSummary){
+    const dc=data.cores, dt=data.tipografia, dl=data.layout; const feito=x=>!!(x&&x.done); const checks=[
+      {level:feito(dc)?'ok':'warn', text:feito(dc)?'Paleta de Cores (3.2) concluída: os tokens de cor podem partir dela.':'Paleta de Cores (3.2) ainda não concluída: os tokens de cor devem nomear por função cores que já foram escolhidas.'},
+      {level:feito(dt)?'ok':'warn', text:feito(dt)?'Tipografia (3.3) concluída: os tokens de fonte podem partir dela.':'Tipografia (3.3) ainda não concluída: sem ela não há o que nomear nos tokens de fonte.'},
+      {level:feito(dl)?'ok':'warn', text:feito(dl)?'Layout (3.5) concluído: os tokens de espaçamento podem partir da escala.':'Layout e Espaçamento (3.5) ainda não concluído: a escala de espaçamento vira os tokens de espaçamento.'},
+      {level:'info', text:'Regra do livro: nomeie pela função (color-primary, color-error), não pela aparência (azul_logo). Se a identidade mudar, as funções permanecem.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={'TOKENS DE DESIGN\n'+tokenJson} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={'TOKENS DE DESIGN\n'+tokenJson} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <div className="code-block">{tokenJson}</div>
         <div style={{marginTop:'10px'}}><CopyButton text={tokenJson} label="Copiar JSON" /></div>
       </SummaryShell>
@@ -121,8 +127,14 @@ function ArtDesignSystem({data,setData,goHome}){
   ];
   if(showSummary){
     const txt = `DESIGN SYSTEM\n\nComponentes:\n${s.componentes.filter(c=>c.nome).map(c=>'- '+c.nome+' ('+c.estados.join(', ')+') — '+c.uso).join('\n')}\n\nPadrões:\n${s.padroes.filter(Boolean).map(p=>'- '+p).join('\n')}\n\nDo/Don\'t:\n${s.doDont.filter(d=>d.do||d.dont).map(d=>'Faça: '+d.do+' | Evite: '+d.dont).join('\n')}`;
+    const comp=(s.componentes||[]).filter(c=>c.nome&&c.nome.trim()); const semEst=comp.filter(c=>!(c.estados&&c.estados.length)); const pd=(s.padroes||[]).filter(Boolean); const dd=(s.doDont||[]).filter(d=>(d.do&&d.do.trim())||(d.dont&&d.dont.trim())); const tres=[s.temGuia,s.temKit,s.temSistema]; const checks=[
+      {level:comp.length?(semEst.length?'warn':'ok'):'warn', text:comp.length?(semEst.length?'Componentes sem estados definidos: '+semEst.map(c=>c.nome).join(', ')+'.':comp.length+' componente(s) com estados definidos.'):'Nenhum componente registrado: componentes são os blocos reutilizáveis do sistema.'},
+      {level:pd.length?'ok':'warn', text:pd.length?pd.length+' padrão(ões) de interface registrado(s).':'Sem padrões registrados (combinações recorrentes de componentes).'},
+      {level:dd.length?'ok':'warn', text:dd.length?'Documentação com '+dd.length+' par(es) do/don\'t.':'Documentação sem exemplos do que fazer e do que evitar.'},
+      {level:tres.every(v=>v!==null&&v!==undefined)?'ok':'info', text:tres.every(v=>v!==null&&v!==undefined)?'Guia de estilo × UI Kit × Design System avaliados: o Design System é o que une os três, com princípios, boas práticas e código.':'Responda se já existem guia de estilo, UI Kit e sistema: o livro avisa que os três costumam ser confundidos.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <div className="summary-block"><h4>Componentes</h4>{s.componentes.filter(c=>c.nome).map(c=><p key={c.id} style={{color:'var(--ink)'}}>{c.nome} — {c.estados.join(', ')}</p>)}</div>
         <div className="summary-block"><h4>Padrões</h4>{s.padroes.filter(Boolean).map((p,i)=><p key={i} style={{color:'var(--ink)'}}>{p}</p>)}</div>
         <CopyButton text={txt} />
@@ -178,8 +190,15 @@ function ArtPrototipagem({data,setData,goHome}){
   ];
   if(showSummary){
     const txt = `PROTOTIPAGEM\nTarefa-chave: ${s.tarefaChave}\nTelas: ${s.telasSelecionadas.join(', ')||'—'}\nTransições:\n${s.interacoes.filter(Boolean).map(i=>'- '+i).join('\n')}\nEstados — erro: ${s.estados.erro} | carregando: ${s.estados.carregando} | sucesso: ${s.estados.sucesso}\nAcessibilidade verificada: ${s.inclusivo.join(', ')||'—'}\nTeste — tarefa: ${s.tarefaTeste}\nFuncionou: ${s.funcionou.filter(Boolean).join(', ')}\nGerou dúvida: ${s.geraramDuvida.filter(Boolean).join(', ')}`;
+    const ne=a=>(a||[]).filter(x=>x&&String(x).trim()); const es=s.estados||{}; const checks=[
+      {level:(s.tarefaChave&&s.tarefaChave.trim())?'ok':'warn', text:(s.tarefaChave&&s.tarefaChave.trim())?'Tarefa-chave definida para o protótipo.':'Defina a tarefa-chave que o protótipo precisa permitir.'},
+      {level:(s.telasSelecionadas||[]).length?'ok':'warn', text:(s.telasSelecionadas||[]).length+' tela(s) selecionada(s) a partir do fluxo de telas (2.6).'},
+      {level:(es.erro&&es.carregando&&es.sucesso)?'ok':'warn', text:(es.erro&&es.carregando&&es.sucesso)?'Estados de erro, carregamento e sucesso descritos.':'Faltam estados do protótipo (erro, carregando, sucesso): sem eles o teste só mostra o caminho feliz.'},
+      {level:(s.inclusivo||[]).length?'ok':'warn', text:(s.inclusivo||[]).length?(s.inclusivo||[]).length+' cuidado(s) de acessibilidade desde o desenho.':'Nenhum cuidado de protótipo inclusivo marcado: acessibilidade deve entrar desde o desenho.'},
+      {level:(s.tarefaTeste&&ne(s.funcionou).length&&ne(s.geraramDuvida).length)?'ok':'info', text:(s.tarefaTeste&&ne(s.funcionou).length&&ne(s.geraramDuvida).length)?'Teste de usabilidade registrado (o que funcionou e o que gerou dúvida).':'Teste de usabilidade incompleto: registre a tarefa, o que funcionou e o que gerou dúvida.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <p style={{color:'var(--ink)'}}><strong>{s.tarefaChave}</strong></p>
         <p style={{color:'var(--ink)'}}>Telas: {s.telasSelecionadas.join(' → ')||'—'}</p>
         <CopyButton text={txt} />
@@ -250,8 +269,14 @@ function ArtTomDeVoz({data,setData,goHome}){
   ];
   if(showSummary){
     const txt = `TOM DE VOZ E MICROCOPY\nPúblico: ${s.publico} · Contexto: ${s.contexto}\nTom: ${s.tom.join(', ')}\nTemas sensíveis: ${s.temasSensiveis.join(', ')}\nFluxo: ${s.fluxoEscolhido}\n\nTEXTOS\n`+s.textos.filter(t=>t.atual).map(t=>'['+t.tipo+'] "'+t.atual+'" → '+(t.reescrita||'(mantido)')).join('\n')+`\n\nLinguagem inclusiva verificada: ${s.inclusiva.join(', ')||'—'}`;
+    const tx=(s.textos||[]).filter(t=>t.atual&&t.atual.trim()); const confusos=tx.filter(t=>t.claro===false&&!(t.reescrita&&t.reescrita.trim())); const checks=[
+      {level:(s.publico&&s.publico.trim())?'ok':'warn', text:(s.publico&&s.publico.trim())?'Público definido: o tom de voz se escolhe para ele.':'Defina o público: o tom certo depende de quem lê.'},
+      {level:(s.tom||[]).length?'ok':'warn', text:(s.tom||[]).length?'Tom de voz: '+(s.tom||[]).join(', ')+'.':'Nenhum atributo de tom de voz escolhido.'},
+      {level:tx.length?(confusos.length?'warn':'ok'):'warn', text:tx.length?(confusos.length?confusos.length+' texto(s) marcado(s) como pouco claros e ainda sem reescrita.':'Textos do fluxo avaliados; os pouco claros foram reescritos.'):'Nenhum texto do fluxo (botão, mensagem de erro, sucesso) foi avaliado.'},
+      {level:(s.inclusiva||[]).length?'ok':'warn', text:(s.inclusiva||[]).length?(s.inclusiva||[]).length+' prática(s) de linguagem inclusiva marcada(s).':'Nenhuma prática de linguagem inclusiva marcada.'},
+    ];
     return (
-      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
+      <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         {s.textos.filter(t=>t.atual).map(t=>(<p key={t.id} style={{color:'var(--ink)'}}><span className="badge neutral">{t.tipo}</span> "{t.atual}" → <strong>{t.reescrita||'(mantido)'}</strong></p>))}
         <CopyButton text={txt} />
       </SummaryShell>
