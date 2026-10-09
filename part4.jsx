@@ -419,6 +419,8 @@ function Home({data,onOpen,setData}){
 }
 
 function Sidebar({current,onOpen,onHome,data,theme,setTheme}){
+  const [menuOpen,setMenuOpen] = useState(false);
+  const atual = (ARTIFACTS.find(a=>a.id===current)||{}).title;
   const cap2 = ARTIFACTS.filter(a=>a.chapter===2);
   const cap3 = ARTIFACTS.filter(a=>a.chapter===3);
   const doneCount = ARTIFACTS.filter(a=>data[a.id]&&data[a.id].done).length;
@@ -426,7 +428,7 @@ function Sidebar({current,onOpen,onHome,data,theme,setTheme}){
     const started = isArtifactStarted(data[a.id]);
     const done = data[a.id]&&data[a.id].done;
     return (
-      <div key={a.id} className={"nav-item"+(current===a.id?' active':'')} onClick={()=>onOpen(a.id)}>
+      <div key={a.id} className={"nav-item"+(current===a.id?' active':'')} onClick={()=>{onOpen(a.id);setMenuOpen(false);}}>
         <span className={"nav-dot"+(done?' done':(started?' progress':''))}></span>
         <span className="lbl">{a.title}</span>
       </div>
@@ -438,7 +440,9 @@ function Sidebar({current,onOpen,onHome,data,theme,setTheme}){
         <div className="brand-mark">P</div>
         <div className="brand-text"><div className="k">Atelier de Produto</div><div className="t">Do Problema ao Protótipo</div></div>
       </div>
-      <span className="progress-pill">{doneCount}/{ARTIFACTS.length} concluídos</span>
+      <div className="sidebar-top"><span className="progress-pill">{doneCount}/{ARTIFACTS.length} concluídos</span>
+      <button type="button" className="menu-toggle" aria-expanded={menuOpen} onClick={()=>setMenuOpen(o=>!o)}>{menuOpen?'✕ Fechar menu':'☰ Artefatos'+(atual?' · '+atual:'')}</button></div>
+      <div className={"sidebar-body"+(menuOpen?' open':'')}>
       <div className="chapter-label">Cap. 2 — Construindo a Solução</div>
       {cap2.map(renderItem)}
       <div className="chapter-label">Cap. 3 — Design System</div>
@@ -447,6 +451,7 @@ function Sidebar({current,onOpen,onHome,data,theme,setTheme}){
         <button className={theme==='light'?'on':''} onClick={()=>setTheme('light')}>Claro</button>
         <button className={theme==='dark'?'on':''} onClick={()=>setTheme('dark')}>Escuro</button>
         <button className={theme==='system'?'on':''} onClick={()=>setTheme('system')}>Sistema</button>
+      </div>
       </div>
     </div>
   );
