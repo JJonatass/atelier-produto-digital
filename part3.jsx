@@ -186,6 +186,96 @@ const ESQUEMA_LABELS = {
   triangular:'Triangular',
   quadrado:'Quadrado (tetrádica)'
 };
+/* ---------- Psicologia das cores (referência complementar, modal) ---------- */
+const PSICO_CORES = [
+  {nome:'Vermelho',hex:'#D32F2F',grupo:'quentes',sensacoes:'Energia, paixão, urgência, perigo, amor, força.',cuidado:'Pode transmitir agressividade e ansiedade em excesso; chama muita atenção.',usos:'Erro e exclusão (estado error), alertas críticos, promoções e botões de ação urgente, comida (estimula o apetite).'},
+  {nome:'Laranja',hex:'#F57C00',grupo:'quentes',sensacoes:'Entusiasmo, criatividade, calor humano, jovialidade, sociabilidade.',cuidado:'Em excesso pode soar barato ou impulsivo.',usos:'Chamadas para ação amigáveis, avisos leves (warning), comunidade, alimentação, projetos com tom informal e acolhedor.'},
+  {nome:'Amarelo',hex:'#F9C80E',grupo:'quentes',sensacoes:'Otimismo, alegria, luz, atenção, energia.',cuidado:'Cansa a vista em grandes áreas e tem contraste baixo com branco: use texto escuro sobre ele.',usos:'Destaques, avisos (warning), realces pontuais, produtos infantis e de lazer.'},
+  {nome:'Verde',hex:'#2E7D32',grupo:'frias',sensacoes:'Natureza, crescimento, saúde, equilíbrio, esperança, dinheiro.',cuidado:'Vermelho × verde é a combinação mais confundida no daltonismo; tons oliva podem parecer sem vida.',usos:'Sucesso e confirmação (estado success), sustentabilidade, saúde, finanças, agricultura e meio ambiente.'},
+  {nome:'Verde-menta',hex:'#4DB6AC',grupo:'frias',sensacoes:'Calma, frescor, cuidado, renovação, leveza.',cuidado:'Muito claro pode perder contraste com fundos brancos.',usos:'Bem-estar, saúde preventiva, fintechs amigáveis, produtos de autocuidado.'},
+  {nome:'Turquesa / ciano',hex:'#00ACC1',grupo:'frias',sensacoes:'Clareza, frescor, serenidade, água, inovação.',cuidado:'Saturado demais pode parecer frio ou artificial.',usos:'Água e saneamento, tecnologia, saúde, comunicação limpa e moderna.'},
+  {nome:'Azul',hex:'#1976D2',grupo:'frias',sensacoes:'Confiança, calma, segurança, competência, estabilidade.',cuidado:'Pode soar frio ou distante; é tão comum que dificulta a diferenciação.',usos:'Tecnologia, bancos, saúde, links e informação (estado info), plataformas que precisam transmitir credibilidade.'},
+  {nome:'Azul-marinho',hex:'#1A237E',grupo:'frias',sensacoes:'Autoridade, seriedade, tradição, profissionalismo.',cuidado:'Pode parecer conservador ou pesado.',usos:'Instituições, serviços jurídicos e financeiros, educação formal, cabeçalhos e texto de destaque.'},
+  {nome:'Roxo / violeta',hex:'#7B1FA2',grupo:'frias',sensacoes:'Criatividade, imaginação, espiritualidade, mistério, luxo.',cuidado:'Em excesso pode parecer artificial; em partes do Brasil também evoca luto e religiosidade.',usos:'Criatividade, beleza, educação, meditação, produtos premium e culturais.'},
+  {nome:'Lavanda',hex:'#9575CD',grupo:'frias',sensacoes:'Calma, delicadeza, nostalgia, tranquilidade.',cuidado:'Pouco contraste em tons claros.',usos:'Sono, bem-estar, saúde mental, produtos suaves e acolhedores.'},
+  {nome:'Rosa',hex:'#EC407A',grupo:'quentes',sensacoes:'Afeto, cuidado, delicadeza, juventude, empatia.',cuidado:'Evite reforçar estereótipos de gênero sem intenção.',usos:'Beleza, saúde da mulher, causas sociais, produtos infantis e de afeto.'},
+  {nome:'Magenta',hex:'#C2185B',grupo:'quentes',sensacoes:'Ousadia, transformação, energia, inclusão, ruptura.',cuidado:'Muito intenso para uso em grandes áreas ou textos longos.',usos:'Marcas que querem se destacar, campanhas de diversidade, acentos de interface.'},
+  {nome:'Vinho / bordô',hex:'#7B1E3A',grupo:'quentes',sensacoes:'Sofisticação, maturidade, intensidade, tradição.',cuidado:'Escuro: cuide do contraste com fundos escuros.',usos:'Gastronomia, moda, cultura, produtos premium com tom clássico.'},
+  {nome:'Marrom',hex:'#6D4C41',grupo:'neutras',sensacoes:'Terra, estabilidade, rusticidade, conforto, confiabilidade.',cuidado:'Pode transmitir peso ou algo antiquado.',usos:'Artesanato, café, agricultura, produtos naturais e orgânicos.'},
+  {nome:'Bege / creme',hex:'#D7C4A3',grupo:'neutras',sensacoes:'Naturalidade, simplicidade, acolhimento, neutralidade calorosa.',cuidado:'Sozinho tende ao sem graça; precisa de um acento.',usos:'Fundos acolhedores, bem-estar, produtos orgânicos, interfaces de leitura.'},
+  {nome:'Preto',hex:'#212121',grupo:'neutras',sensacoes:'Sofisticação, elegância, poder, formalidade, mistério.',cuidado:'Pode pesar e, no Ocidente, lembra luto; evite preto puro sobre branco puro em textos longos.',usos:'Texto, modo escuro, luxo e moda, tipografia de alto impacto.'},
+  {nome:'Branco',hex:'#FFFFFF',grupo:'neutras',sensacoes:'Pureza, limpeza, simplicidade, espaço, clareza.',cuidado:'Pode parecer frio ou hospitalar; em partes da Ásia está ligado ao luto.',usos:'Fundos, respiro e espaço negativo, minimalismo, saúde e higiene.'},
+  {nome:'Cinza',hex:'#757575',grupo:'neutras',sensacoes:'Neutralidade, equilíbrio, sobriedade, modernidade.',cuidado:'Em excesso gera tédio; cinza claro sobre branco costuma reprovar no contraste.',usos:'Textos secundários, bordas, elementos desabilitados, fundos de cartões.'},
+  {nome:'Prata',hex:'#B0BEC5',grupo:'neutras',sensacoes:'Modernidade, tecnologia, elegância discreta.',cuidado:'Baixo contraste; use como apoio, não para texto.',usos:'Tecnologia, acabamentos, divisores e detalhes sofisticados.'},
+  {nome:'Dourado',hex:'#C9A227',grupo:'quentes',sensacoes:'Prestígio, riqueza, conquista, tradição, celebração.',cuidado:'Pode parecer ostentação; contraste baixo sobre fundo claro.',usos:'Premiações, selos de qualidade, produtos premium e conquistas (gamificação).'}
+];
+
+function PsicoCores({onPick}){
+  const [open,setOpen]=useState(false);
+  const [grupo,setGrupo]=useState('todas');
+  const closeRef=useRef(null);
+  useEffect(()=>{
+    if(!open) return;
+    const onKey=e=>{ if(e.key==='Escape') setOpen(false); };
+    document.addEventListener('keydown',onKey);
+    const prev=document.body.style.overflow; document.body.style.overflow='hidden';
+    if(closeRef.current) closeRef.current.focus();
+    return ()=>{ document.removeEventListener('keydown',onKey); document.body.style.overflow=prev; };
+  },[open]);
+  const lista = PSICO_CORES.filter(c=>grupo==='todas'||c.grupo===grupo);
+  const grupos=[['todas','Todas'],['quentes','Quentes'],['frias','Frias'],['neutras','Neutras']];
+  return (
+    <>
+      <button type="button" className="btn ghost psico-btn" onClick={()=>setOpen(true)}>🎨 Psicologia das cores — o que cada cor transmite</button>
+      {open && (
+        <div className="modal-overlay" onClick={e=>{ if(e.target===e.currentTarget) setOpen(false); }}>
+          <div className="modal-box" role="dialog" aria-modal="true" aria-label="Psicologia das cores">
+            <div className="modal-head">
+              <div>
+                <h3 style={{margin:0}}>🎨 Psicologia das cores</h3>
+                <p className="mini-note" style={{margin:'4px 0 0'}}>Referência complementar para justificar a sua escolha.</p>
+              </div>
+              <button ref={closeRef} type="button" className="btn ghost" onClick={()=>setOpen(false)} aria-label="Fechar">✕ Fechar</button>
+            </div>
+            <div className="modal-body">
+              <p className="mini-note">O livro lembra que a psicologia das cores <strong>não é uma ciência exata</strong>: ela mostra o que cada cor <em>costuma</em> transmitir, para você escolher com consciência. Os significados abaixo são associações comuns e variam com cultura, contexto e combinação de cores. Esta lista é uma referência geral de apoio, não uma citação do livro.</p>
+              <div className="psico-filtros" role="group" aria-label="Filtrar cores">
+                {grupos.map(([v,l])=>(<button key={v} type="button" className={"chip"+(grupo===v?' active':'')} onClick={()=>setGrupo(v)}>{l}</button>))}
+              </div>
+              <div className="psico-grid">
+                {lista.map(c=>(
+                  <div key={c.nome} className="psico-card">
+                    <div className="psico-top">
+                      <span className="psico-sw" style={{background:c.hex}} aria-hidden="true"></span>
+                      <div><strong>{c.nome}</strong><div className="mini-note" style={{margin:0}}>{c.hex}</div></div>
+                    </div>
+                    <p><strong>Transmite:</strong> {c.sensacoes}</p>
+                    <p><strong>Use em:</strong> {c.usos}</p>
+                    <p className="psico-care"><strong>Cuidado:</strong> {c.cuidado}</p>
+                    {onPick && (
+                      <div className="psico-actions">
+                        {onPick.map(([lab,fn])=>(<button key={lab} type="button" className="btn ghost" onClick={()=>{ fn(c.hex); setOpen(false); }}>Usar como {lab}</button>))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="summary-block">
+                <h4>Antes de decidir</h4>
+                <ul>
+                  <li>Pense no <strong>público e na cultura</strong>: o mesmo tom pode significar coisas diferentes (por exemplo, vermelho é perigo para muitos e sorte para outros; branco ou preto podem estar ligados ao luto, conforme a cultura).</li>
+                  <li>A cor também <strong>combina com o tema da ODS</strong> do seu projeto: use a justificativa para ligar a sensação da cor ao problema que você quer resolver.</li>
+                  <li>O livro pede: <strong>nunca dependa só da cor</strong> (combine com ícone e texto) e confira o contraste mínimo de <strong>4,5:1</strong> para texto normal.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function ArtCores({data,setData,goHome}){
   const defaults = {
     ods:'', primaria:'#2E6F5E', justificativaPrimaria:'', secundaria:'#B8862E', justificativaSecundaria:'',
@@ -217,7 +307,7 @@ function ArtCores({data,setData,goHome}){
        mistakes:["Tratar cor como detalhe de “design bonito”: ela faz parte da lógica de uso e da mensagem do produto."]
      },
      book:<p>As cores não são neutras: cada tom envia uma mensagem. Escolha uma ODS e defina a cor primária — a principal cor de identidade, usada em botões e cabeçalhos — justificando pela psicologia das cores.</p>,
-     render:()=>(<div><SelectField label="ODS escolhida" value={ods} onChange={setOds} options={ODS_LIST} hint="Escolhida uma vez aqui, ela já vem preenchida em Tipografia e Ícones — é a mesma ODS do projeto em todo o Design System." /><ColorField label="Cor primária" value={s.primaria} onChange={v=>patch({primaria:v})} /><Field type="textarea" label="Justificativa (psicologia das cores)" value={s.justificativaPrimaria} onChange={v=>patch({justificativaPrimaria:v})} rows={2} /></div>)
+     render:()=>(<div><PsicoCores onPick={[["primária",v=>patch({primaria:v})]]} /><SelectField label="ODS escolhida" value={ods} onChange={setOds} options={ODS_LIST} hint="Escolhida uma vez aqui, ela já vem preenchida em Tipografia e Ícones — é a mesma ODS do projeto em todo o Design System." /><ColorField label="Cor primária" value={s.primaria} onChange={v=>patch({primaria:v})} /><Field type="textarea" label="Justificativa (psicologia das cores)" value={s.justificativaPrimaria} onChange={v=>patch({justificativaPrimaria:v})} rows={2} /></div>)
     },
     {label:'Secundária e neutras',
      teach:{
@@ -228,6 +318,7 @@ function ArtCores({data,setData,goHome}){
      book:<p>A cor secundária apoia a primária em destaques menores. As neutras (tons de cinza, preto e branco) são usadas em fundos, bordas e textos.</p>,
      render:()=>(
        <div>
+         <PsicoCores onPick={[["secundária",v=>patch({secundaria:v})]]} />
          <ColorField label="Cor secundária" value={s.secundaria} onChange={v=>patch({secundaria:v})} />
          <Field type="textarea" label="Justificativa" value={s.justificativaSecundaria} onChange={v=>patch({justificativaSecundaria:v})} rows={2} />
          <div className="grid-3">
@@ -247,12 +338,12 @@ function ArtCores({data,setData,goHome}){
      },
      book:<p>Estados de interface precisam de cor própria: sucesso (success), erro (error), aviso (warning) e informação (info) — sempre combinadas com ícone e texto, nunca só a cor.</p>,
      render:()=>(
-       <div className="grid-2">
+       <div><PsicoCores /><div className="grid-2">
          <ColorField label="Success" value={s.estados.success} onChange={v=>patch({estados:{...s.estados,success:v}})} />
          <ColorField label="Error" value={s.estados.error} onChange={v=>patch({estados:{...s.estados,error:v}})} />
          <ColorField label="Warning" value={s.estados.warning} onChange={v=>patch({estados:{...s.estados,warning:v}})} />
          <ColorField label="Info" value={s.estados.info} onChange={v=>patch({estados:{...s.estados,info:v}})} />
-       </div>
+       </div></div>
      )
     },
     {label:'Círculo cromático',
