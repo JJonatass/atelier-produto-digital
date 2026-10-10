@@ -201,18 +201,41 @@ const PSICO_CORES = [
   {nome:'Rosa',hex:'#EC407A',grupo:'quentes',sensacoes:'Afeto, cuidado, delicadeza, juventude, empatia.',cuidado:'Evite reforçar estereótipos de gênero sem intenção.',usos:'Beleza, saúde da mulher, causas sociais, produtos infantis e de afeto.'},
   {nome:'Magenta',hex:'#C2185B',grupo:'quentes',sensacoes:'Ousadia, transformação, energia, inclusão, ruptura.',cuidado:'Muito intenso para uso em grandes áreas ou textos longos.',usos:'Marcas que querem se destacar, campanhas de diversidade, acentos de interface.'},
   {nome:'Vinho / bordô',hex:'#7B1E3A',grupo:'quentes',sensacoes:'Sofisticação, maturidade, intensidade, tradição.',cuidado:'Escuro: cuide do contraste com fundos escuros.',usos:'Gastronomia, moda, cultura, produtos premium com tom clássico.'},
-  {nome:'Marrom',hex:'#6D4C41',grupo:'neutras',sensacoes:'Terra, estabilidade, rusticidade, conforto, confiabilidade.',cuidado:'Pode transmitir peso ou algo antiquado.',usos:'Artesanato, café, agricultura, produtos naturais e orgânicos.'},
-  {nome:'Bege / creme',hex:'#D7C4A3',grupo:'neutras',sensacoes:'Naturalidade, simplicidade, acolhimento, neutralidade calorosa.',cuidado:'Sozinho tende ao sem graça; precisa de um acento.',usos:'Fundos acolhedores, bem-estar, produtos orgânicos, interfaces de leitura.'},
+  {nome:'Marrom',hex:'#6D4C41',grupo:'terrosas',sensacoes:'Terra, estabilidade, rusticidade, conforto, confiabilidade.',cuidado:'Pode transmitir peso ou algo antiquado.',usos:'Artesanato, café, agricultura, produtos naturais e orgânicos.'},
+  {nome:'Bege / creme',hex:'#D7C4A3',grupo:'terrosas',sensacoes:'Naturalidade, simplicidade, acolhimento, neutralidade calorosa.',cuidado:'Sozinho tende ao sem graça; precisa de um acento.',usos:'Fundos acolhedores, bem-estar, produtos orgânicos, interfaces de leitura.'},
   {nome:'Preto',hex:'#212121',grupo:'neutras',sensacoes:'Sofisticação, elegância, poder, formalidade, mistério.',cuidado:'Pode pesar e, no Ocidente, lembra luto; evite preto puro sobre branco puro em textos longos.',usos:'Texto, modo escuro, luxo e moda, tipografia de alto impacto.'},
   {nome:'Branco',hex:'#FFFFFF',grupo:'neutras',sensacoes:'Pureza, limpeza, simplicidade, espaço, clareza.',cuidado:'Pode parecer frio ou hospitalar; em partes da Ásia está ligado ao luto.',usos:'Fundos, respiro e espaço negativo, minimalismo, saúde e higiene.'},
   {nome:'Cinza',hex:'#757575',grupo:'neutras',sensacoes:'Neutralidade, equilíbrio, sobriedade, modernidade.',cuidado:'Em excesso gera tédio; cinza claro sobre branco costuma reprovar no contraste.',usos:'Textos secundários, bordas, elementos desabilitados, fundos de cartões.'},
   {nome:'Prata',hex:'#B0BEC5',grupo:'neutras',sensacoes:'Modernidade, tecnologia, elegância discreta.',cuidado:'Baixo contraste; use como apoio, não para texto.',usos:'Tecnologia, acabamentos, divisores e detalhes sofisticados.'},
-  {nome:'Dourado',hex:'#C9A227',grupo:'quentes',sensacoes:'Prestígio, riqueza, conquista, tradição, celebração.',cuidado:'Pode parecer ostentação; contraste baixo sobre fundo claro.',usos:'Premiações, selos de qualidade, produtos premium e conquistas (gamificação).'}
+  {nome:'Dourado',hex:'#C9A227',grupo:'quentes',sensacoes:'Prestígio, riqueza, conquista, tradição, celebração.',cuidado:'Pode parecer ostentação; contraste baixo sobre fundo claro.',usos:'Premiações, selos de qualidade, produtos premium e conquistas (gamificação).'},
+  {nome:'Vermelho-carmim',hex:'#B71C1C',grupo:'quentes',sensacoes:'Intensidade, poder, paixão profunda, seriedade.',cuidado:'Escuro e pesado: pode soar ameaçador em áreas grandes.',usos:'Alertas graves, destaque de marcas fortes, esportes e entretenimento.'},
+  {nome:'Coral',hex:'#FF7043',grupo:'quentes',sensacoes:'Vitalidade, simpatia, calor humano, otimismo.',cuidado:'Contraste baixo com branco em tons claros.',usos:'Comunidade, apps sociais, bem-estar, botões amigáveis.'},
+  {nome:'Salmão',hex:'#FA8072',grupo:'quentes',sensacoes:'Suavidade, acolhimento, afeto leve, cordialidade.',cuidado:'Pode parecer desbotado se não houver um acento forte.',usos:'Beleza, gastronomia, interfaces acolhedoras e femininas ou neutras.'},
+  {nome:'Pêssego',hex:'#FFCCBC',grupo:'quentes',sensacoes:'Ternura, conforto, delicadeza, simpatia.',cuidado:'Muito claro: não use para texto.',usos:'Fundos suaves, cartões, produtos de cuidado e infantis.'},
+  {nome:'Rosa-claro (blush)',hex:'#F8BBD0',grupo:'quentes',sensacoes:'Doçura, calma, carinho, romantismo suave.',cuidado:'Evite estereótipos de gênero; contraste baixo.',usos:'Fundos delicados, saúde da mulher, bebês, produtos de afeto.'},
+  {nome:'Amarelo-mostarda',hex:'#C99700',grupo:'terrosas',sensacoes:'Calor, maturidade, otimismo contido, tradição.',cuidado:'Pode deixar a paleta opaca se for mal combinado.',usos:'Acentos de marca com personalidade, produtos artesanais, destaques sóbrios.'},
+  {nome:'Ocre',hex:'#CC7722',grupo:'terrosas',sensacoes:'Terra, aconchego, tradição, autenticidade.',cuidado:'Pode soar antiquado se usado sozinho.',usos:'Agricultura, artesanato, cultura regional, produtos naturais.'},
+  {nome:'Terracota',hex:'#BF5B3D',grupo:'terrosas',sensacoes:'Raízes, calor, artesanal, conexão com a terra.',cuidado:'Evite sobre fundos escuros sem checar contraste.',usos:'Cultura local, gastronomia, decoração, marcas com identidade regional.'},
+  {nome:'Cobre',hex:'#B87333',grupo:'terrosas',sensacoes:'Valor, calor, artesanato, tradição industrial.',cuidado:'Parece metálico: difícil de reproduzir só com cor chapada.',usos:'Detalhes premium, ferramentas, gastronomia e produtos artesanais.'},
+  {nome:'Areia',hex:'#E6D5B8',grupo:'terrosas',sensacoes:'Leveza, praia, simplicidade, serenidade natural.',cuidado:'Pouco contraste com branco.',usos:'Fundos neutros calorosos, turismo, bem-estar, produtos naturais.'},
+  {nome:'Verde-floresta',hex:'#1B5E20',grupo:'frias',sensacoes:'Solidez, natureza profunda, segurança, tradição.',cuidado:'Escuro: confira contraste em modo escuro.',usos:'Meio ambiente, finanças, cabeçalhos e botões de peso.'},
+  {nome:'Verde-esmeralda',hex:'#00897B',grupo:'frias',sensacoes:'Equilíbrio, renovação, cura, sofisticação calma.',cuidado:'Entre verde e azul: pode confundir com info/success.',usos:'Saúde, tecnologia sustentável, fintechs, bem-estar.'},
+  {nome:'Verde-limão',hex:'#7CB342',grupo:'frias',sensacoes:'Frescor, juventude, energia natural, novidade.',cuidado:'Muito vibrante cansa; contraste baixo com branco.',usos:'Alimentação saudável, esportes, apps jovens, destaques.'},
+  {nome:'Verde-musgo / oliva',hex:'#558B2F',grupo:'frias',sensacoes:'Natureza madura, rusticidade, estabilidade.',cuidado:'Tons oliva muito apagados podem parecer sem vida.',usos:'Agro, ecologia, produtos orgânicos, aventura e ar livre.'},
+  {nome:'Azul-claro (céu)',hex:'#4FC3F7',grupo:'frias',sensacoes:'Leveza, abertura, liberdade, tranquilidade.',cuidado:'Contraste baixo: não use para texto sobre branco.',usos:'Fundos, ilustrações, água, comunicação e saúde leve.'},
+  {nome:'Azul-bebê',hex:'#90CAF9',grupo:'frias',sensacoes:'Suavidade, calma, ternura, inocência.',cuidado:'Muito claro: serve como fundo, não como texto.',usos:'Fundos delicados, infantil, saúde, produtos de cuidado.'},
+  {nome:'Índigo',hex:'#3F51B5',grupo:'frias',sensacoes:'Profundidade, intuição, sabedoria, confiança.',cuidado:'Pode ficar próximo do azul-marinho e do roxo.',usos:'Educação, tecnologia, plataformas de conhecimento, modo escuro.'},
+  {nome:'Lilás',hex:'#BA68C8',grupo:'frias',sensacoes:'Delicadeza, criatividade suave, romantismo, nostalgia.',cuidado:'Pode soar infantil ou datado.',usos:'Beleza, bem-estar, criatividade, produtos jovens.'},
+  {nome:'Ameixa / berinjela',hex:'#4A148C',grupo:'frias',sensacoes:'Riqueza, mistério, dignidade, sofisticação.',cuidado:'Escuro: cuidado com contraste em fundos escuros.',usos:'Premium, cultura, cosméticos, marcas de luxo discreto.'},
+  {nome:'Grafite / carvão',hex:'#37474F',grupo:'neutras',sensacoes:'Seriedade, tecnologia, solidez, modernidade sóbria.',cuidado:'Pode soar frio; use com acento caloroso.',usos:'Texto principal, modo escuro, interfaces profissionais e dashboards.'},
+  {nome:'Marfim / off-white',hex:'#FFF8E1',grupo:'neutras',sensacoes:'Suavidade, elegância calorosa, conforto de leitura.',cuidado:'Pouco contraste com branco puro.',usos:'Fundos de leitura, cartões, produtos editoriais e orgânicos.'},
+  {nome:'Verde-água claro',hex:'#B2DFDB',grupo:'frias',sensacoes:'Serenidade, limpeza, alívio, frescor suave.',cuidado:'Muito claro: use como fundo ou apoio.',usos:'Fundos de saúde, bem-estar, saneamento e cuidado.'}
 ];
 
 function PsicoCores({onPick}){
   const [open,setOpen]=useState(false);
   const [grupo,setGrupo]=useState('todas');
+  const [busca,setBusca]=useState('');
   const closeRef=useRef(null);
   useEffect(()=>{
     if(!open) return;
@@ -222,8 +245,10 @@ function PsicoCores({onPick}){
     if(closeRef.current) closeRef.current.focus();
     return ()=>{ document.removeEventListener('keydown',onKey); document.body.style.overflow=prev; };
   },[open]);
-  const lista = PSICO_CORES.filter(c=>grupo==='todas'||c.grupo===grupo);
-  const grupos=[['todas','Todas'],['quentes','Quentes'],['frias','Frias'],['neutras','Neutras']];
+  const norm=t=>t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const q=norm(busca.trim());
+  const lista = PSICO_CORES.filter(c=>(grupo==='todas'||c.grupo===grupo)&&(!q||norm(c.nome+' '+c.sensacoes+' '+c.usos).includes(q)));
+  const grupos=[['todas','Todas'],['quentes','Quentes'],['frias','Frias'],['terrosas','Terrosas'],['neutras','Neutras']];
   return (
     <>
       <button type="button" className="btn ghost psico-btn" onClick={()=>setOpen(true)}>🎨 Psicologia das cores — o que cada cor transmite</button>
@@ -242,6 +267,8 @@ function PsicoCores({onPick}){
               <div className="psico-filtros" role="group" aria-label="Filtrar cores">
                 {grupos.map(([v,l])=>(<button key={v} type="button" className={"chip"+(grupo===v?' active':'')} onClick={()=>setGrupo(v)}>{l}</button>))}
               </div>
+              <input type="search" className="psico-busca" value={busca} onChange={e=>setBusca(e.target.value)} placeholder="Buscar por cor, sensação ou uso (ex.: confiança, saúde, luxo)" aria-label="Buscar cor" />
+              <p className="mini-note">{lista.length} de {PSICO_CORES.length} cores</p>
               <div className="psico-grid">
                 {lista.map(c=>(
                   <div key={c.nome} className="psico-card">
@@ -260,6 +287,7 @@ function PsicoCores({onPick}){
                   </div>
                 ))}
               </div>
+              {lista.length===0 && <p className="mini-note">Nenhuma cor encontrada. Tente outra palavra.</p>}
               <div className="summary-block">
                 <h4>Antes de decidir</h4>
                 <ul>
