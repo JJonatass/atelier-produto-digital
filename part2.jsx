@@ -324,7 +324,7 @@ function ArtLeanCanvas({data,setData,goHome}){
        example:<><p><strong>ODS 2 (Fome Zero), personas afetadas:</strong></p><ul><li>Agricultores familiares que perdem alimentos por falta de escoamento.</li><li>Famílias de baixa renda que sofrem com insegurança alimentar.</li><li>ONGs e instituições sociais que distribuem alimentos, mas têm dificuldades logísticas.</li></ul></>,
        mistakes:["Todos os públicos: escolha um segmento prioritário no início (armadilha listada na Proposta de Valor)."]
      },
-     render:()=> <ListField label="Segmentos de clientes" items={s.segmentos} onChange={v=>patch({segmentos:v})} placeholder="Ex.: agricultores familiares que perdem alimentos por falta de escoamento" />
+     render:()=> (<div><ListField label="Segmentos de clientes" items={s.segmentos} onChange={v=>patch({segmentos:v})} placeholder="Ex.: agricultores familiares que perdem alimentos por falta de escoamento" /><VagueFlags text={(s.segmentos||[]).join(' | ')} /></div>)
     },
     {label:'2. Proposta de Valor',
      book:<><p>A PVU é a promessa central de transformação — não é missão, slogan ou lista de funcionalidades. Comece pelo JTBD (Jobs To Be Done): "Quando [situação], eu quero [motivação], para [resultado esperado]". Preencha também os detalhes complementares abaixo — cada template usa alguns deles. Depois de escolher um template, use o botão "Preencher automaticamente" para gerar a PVU já com tudo isso encaixado.</p></>,
@@ -367,6 +367,7 @@ function ArtLeanCanvas({data,setData,goHome}){
              </div>
            )}
            <Field type="textarea" label="Proposta de Valor Única (preenchida)" value={s.pvuTexto} onChange={v=>patch({pvuTexto:v})} placeholder="Preencha o template acima com a sua solução, ou use o botão de preenchimento automático." />
+           <VagueFlags text={s.pvuTexto} extra={/^(um |uma |o |a )?(app|aplicativo|site|sistema|plataforma)\b/.test(vagueNorm((s.pvuTexto||'').trim())) ? 'A proposta começa descrevendo o produto. Comece pelo problema que ele resolve e pela transformação que o segmento ganha.' : null} />
          </div>
          <div style={{marginTop:'18px'}}>
            <label className="field-label">Rubrica de qualidade da PVU (0 = fraco, 2 = forte)</label>
@@ -460,7 +461,7 @@ function ArtLeanCanvas({data,setData,goHome}){
           <tbody>
             {s.canais.map((c,i)=>(
               <tr key={c.id}>
-                <td style={{minWidth:'140px'}}><input value={c.nome} onChange={e=>setCanal(i,'nome',e.target.value)} placeholder="Ex.: WhatsApp (lista)" /></td>
+                <td style={{minWidth:'140px'}}><input value={c.nome} onChange={e=>setCanal(i,'nome',e.target.value)} placeholder="Ex.: WhatsApp (lista)" />{vagueHits(c.nome).length>0 && <div className="vague-inline">! Genérico: troque por um canal específico (ex.: WhatsApp da associação, rádio do bairro).</div>}</td>
                 {['custo','alcance','segmentacao','controle','mensuravel','inclusivo'].map(k=>(
                   <td key={k} style={{width:'64px'}}><input type="number" min="0" max="10" value={c[k]} onChange={e=>setCanal(i,k,Number(e.target.value))} /></td>
                 ))}
@@ -488,6 +489,7 @@ function ArtLeanCanvas({data,setData,goHome}){
         <CheckGroup label="Modelos de receita (marque os que fazem sentido)" options={RECEITA_MODELOS} values={s.receitaModelos} onChange={v=>patch({receitaModelos:v})} />
         <SelectField label="Estratégia de precificação" value={s.precificacao} onChange={v=>patch({precificacao:v})} options={['Baseada em valor','Baseada em custo (cost-plus)','Baseada no mercado (competitiva)','Diferenciada por segmento','Dinâmica/metrada']} />
         <Field type="textarea" label="Mix de receita (como se combinam)" value={s.receitaMix} onChange={v=>patch({receitaMix:v})} placeholder="Ex.: patrocínio de supermercados + editais anuais de inovação social" />
+        <VagueFlags text={s.receitaMix} />
       </div>
      )
     },
@@ -596,7 +598,7 @@ function ArtLeanCanvas({data,setData,goHome}){
 
   if(showSummary){
     const txt = `LEAN CANVAS\n\n1. SEGMENTO DE CLIENTES\n${s.segmentos.filter(Boolean).map(i=>'- '+i).join('\n')}\n\n2. PROPOSTA DE VALOR\n${s.pvuTexto||'—'}\nDetalhes — categoria: ${s.pvuDetalhes.categoria||'—'} · alternativa: ${s.pvuDetalhes.alternativa||'—'} · diferencial: ${s.pvuDetalhes.diferencial||'—'} · prazo/contexto: ${s.pvuDetalhes.prazoContexto||'—'} · evidência: ${s.pvuDetalhes.evidencia||'—'} · mecanismo: ${s.pvuDetalhes.mecanismo||'—'} · métrica: ${s.pvuDetalhes.metrica||'—'}\n(rubrica: ${rubricaSum}/12)\n\n3. SOLUÇÃO / MVP\n${s.funcionalidades.filter(f=>f.nome).map(f=>'- ['+f.classificacao+'] '+f.nome).join('\n')}\nRoadmap — MVP: ${s.roadmap.mvp||'—'} | V1: ${s.roadmap.v1||'—'} | V2: ${s.roadmap.v2||'—'}\n\n4. CANAIS\n${s.canais.filter(c=>c.nome).map(c=>'- '+c.nome+' (nota '+notaCanal(c)+')').join('\n')}\nExperimento e métrica: ${s.experimentoCanais||'—'}\n\n5. FONTES DE RECEITA\n${s.receitaModelos.join(', ')||'—'}\nPrecificação: ${s.precificacao||'—'}\n${s.receitaMix||''}\n\n6. ESTRUTURA DE CUSTOS\nCF: R$ ${s.custos.cf} · CVu: R$ ${s.custos.cvu} · Preço: R$ ${s.custos.preco}\nMCu: R$ ${mcu.toFixed(2)} · Q*: ${qEq!==null?Math.ceil(qEq):'—'} · R*: ${rEq!==null?'R$ '+rEq.toFixed(2):'—'}\n\n7. MÉTRICAS-CHAVE\nNSM: ${s.metricas.nsm||'—'}\nDrivers: ${s.metricas.drivers.filter(Boolean).join(', ')||'—'}\nGuardrails: ${s.metricas.guardrails.filter(Boolean).join(', ')||'—'}\n\n8. VANTAGEM COMPETITIVA\nVRIO: ${vrioSum}/8 (V: ${(s.vrioEv||{}).v||'sem evidência'} | R: ${(s.vrioEv||{}).r||'sem evidência'} | I: ${(s.vrioEv||{}).i||'sem evidência'} | O: ${(s.vrioEv||{}).o||'sem evidência'})\nMoats: ${s.moats.join(', ')||'—'}\nFlywheel: ${s.flywheel.filter(Boolean).join(' → ')||'—'}\n\n9. VIABILIDADE\nTécnica ${s.viabilidade.tecnica}/5 · Econômica ${s.viabilidade.economica}/5 · Ambiental ${s.viabilidade.ambiental}/5 · Social ${s.viabilidade.social}/5 · Escalabilidade ${s.viabilidade.escalabilidade}/5 · Risco ${s.viabilidade.risco}/5`;
-    const fl=a=>(a||[]).filter(x=>x&&String(x).trim()); const mCount=(s.funcionalidades||[]).filter(f=>f.nome&&f.classificacao==='M').length; const nCanais=(s.canais||[]).filter(c=>c.nome).length; const drv=fl(s.metricas.drivers).length; const gr=fl(s.metricas.guardrails).length; const v3=s.viabilidade||{}; const v3vals=[v3.tecnicaOk,v3.economicaOk,v3.socioOk]; const opps=((data.jornada&&data.jornada.etapas)||[]).map(e=>e.oportunidade).filter(o=>o&&o.trim()); const duvs=fl(data.csd&&data.csd.duvidas); const checks=[
+    const fl=a=>(a||[]).filter(x=>x&&String(x).trim()); const mCount=(s.funcionalidades||[]).filter(f=>f.nome&&f.classificacao==='M').length; const nCanais=(s.canais||[]).filter(c=>c.nome).length; const drv=fl(s.metricas.drivers).length; const gr=fl(s.metricas.guardrails).length; const v3=s.viabilidade||{}; const v3vals=[v3.tecnicaOk,v3.economicaOk,v3.socioOk]; const opps=((data.jornada&&data.jornada.etapas)||[]).map(e=>e.oportunidade).filter(o=>o&&o.trim()); const duvs=fl(data.csd&&data.csd.duvidas); const vgS=vagueHits((s.segmentos||[]).join(' | ')), vgP=vagueHits(s.pvuTexto||''), vgC=vagueHits((s.canais||[]).map(c=>c.nome).join(' | ')); const vgChecks=[...(vgS.length?[{level:'warn',text:'Segmento com expressão genérica ('+vgS.join(', ')+'): descreva uma pessoa que você conseguiria encontrar e entrevistar.'}]:[]),...(vgP.length?[{level:'warn',text:'Proposta de valor com expressão genérica ('+vgP.join(', ')+'): diga o que muda para o segmento, de forma testável.'}]:[]),...(vgC.length?[{level:'warn',text:'Canal genérico ('+vgC.join(', ')+'): canais precisam ser específicos, como WhatsApp da associação ou rádio do bairro.'}]:[])]; const checks=[
       {level:fl(s.segmentos).length?'ok':'warn', text:fl(s.segmentos).length?fl(s.segmentos).length+' segmento(s) de clientes definido(s).':'Defina o segmento de clientes: a PVU, os canais e as métricas dependem dele.'},
       {level:s.pvuTexto?(rubricaSum>=9?'ok':'warn'):'warn', text:!s.pvuTexto?'Proposta de Valor ainda não escrita.':('Rubrica da PVU: '+rubricaSum+'/12. '+(rubricaSum>=9?'≥ 9/12 = publicável/validar.':'≤ 8 = refine e reteste antes de seguir.'))},
       {level:mCount===0?'warn':(mCount<=3?'ok':'warn'), text:mCount===0?'Nenhuma funcionalidade marcada como Must have: o que é essencial para validar a proposta?':(mCount<=3?mCount+' funcionalidade(s) Must have.':mCount+' Must haves: o corte radical do livro deixa apenas 3 como M. Reclassifique o excedente em S, C ou W.')},
@@ -611,7 +613,7 @@ function ArtLeanCanvas({data,setData,goHome}){
       {level:(data.ideacao&&data.ideacao.enunciadoSolucao)?'ok':'info', text:(data.ideacao&&data.ideacao.enunciadoSolucao)?'Enunciado da solução (Ideação): "'+data.ideacao.enunciadoSolucao+'" — a PVU e o MVP entregam exatamente isso?':'Conexão: faltou o enunciado da solução no artefato de Ideação (2.2).'},
       {level:'info', text:opps.length?'Conexão com a Jornada — oportunidades que você mapeou: '+opps.join('; ')+'. Cada uma aparece no MVP, no roadmap ou foi descartada de propósito?':'Conexão: a Jornada (2.3) ainda não tem oportunidades registradas para alimentar o MVP.'},
       {level:'info', text:duvs.length?'Conexão com a CSD — dúvidas ainda em aberto: '+duvs.join(' | ')+'. Algum experimento ou métrica do canvas responde a elas?':'Conexão: a Matriz CSD (2.4) não tem dúvidas registradas.'},
-    ];
+    ,...vgChecks];
     return (
       <SummaryShell title={meta.title} n={meta.n} icon={meta.icon} id={meta.id} checks={checks} summaryText={txt} onEdit={()=>setShowSummary(false)} onHome={()=>{patch({done:true});goHome();}}>
         <div className="grid-3">

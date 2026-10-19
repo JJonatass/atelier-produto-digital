@@ -95,6 +95,29 @@ function SelectField({label,value,onChange,options,hint}){
   );
 }
 
+/* ---------- Alertas de texto vago (heurística da oficina; não vem do livro) ---------- */
+const VAGUE_TERMS = ["todo mundo","todos os brasileiros","qualquer pessoa","as pessoas","o público em geral","público em geral","pessoas em geral","empresas em geral","qualidade","bom atendimento","melhor experiência","inovador","inovadora","disruptivo","praticidade para todos","vender o app","ganhar dinheiro","monetizar","internet","redes sociais","divulgação","marketing digital","tecnologia de ponta","solução completa","facilitar a vida"];
+function vagueNorm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function vagueHits(text){
+  const nv = vagueNorm(text); if(!nv.trim()) return [];
+  return VAGUE_TERMS.filter(t=>{
+    const nt = vagueNorm(t).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    // "qualidade do ar" (ou da água, de vida...) é específico; só "qualidade" solta é vago
+    const re = t==='qualidade' ? new RegExp('(^|[^a-z])qualidade(?!\\s+(de|do|da|dos|das)\\b)([^a-z]|$)') : new RegExp('(^|[^a-z])'+nt+'([^a-z]|$)');
+    return re.test(nv);
+  });
+}
+function VagueFlags({text, extra}){
+  const hits = vagueHits(text);
+  if(!hits.length && !extra) return null;
+  return (
+    <div className="vague-flags" role="note">
+      {hits.length>0 && <div className="vague-flag"><span aria-hidden="true">!</span> Expressão genérica: <strong>{hits.join(', ')}</strong>. Troque por algo específico e testável — algo que você possa perguntar a uma pessoa real e ouvir sim ou não.</div>}
+      {extra && <div className="vague-flag"><span aria-hidden="true">!</span> {extra}</div>}
+    </div>
+  );
+}
+
 function ListField({label,items,onChange,placeholder,hint,minRows=0}){
   const list = items && items.length ? items : (minRows>0 ? Array.from({length:minRows},()=>'') : []);
   function set(i,val){ const next=[...list]; next[i]=val; onChange(next); }
